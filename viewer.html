@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Possible Futures Viewer</title>
+  
+  <!-- Cytoscape.js CDN -->
+  <script src="https://unpkg.com/cytoscape@3.22.0/dist/cytoscape.min.js"></script>
+  
+  <!-- Font Awesome CDN -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  
+  <!-- Inline CSS -->
+  <style>
+    body {
+      margin: 0;
+      background-color: #1e1e1e;
+      color: #c7c7c7;
+      font-family: Arial, sans-serif;
+    }
+    #main-container {
+      border: 2px solid #3a3a3a;
+      padding: 10px;
+      height: 100vh;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+    #graph-container {
+      flex: 1;
+      background-color: #1e1e1e;
+    }
+    #bottom-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    #text-area {
+      color: #c7c7c7;
+      padding: 10px;
+      flex: 1;
+    }
+    #controls-and-branding {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      padding: 10px;
+    }
+    #controls {
+      display: flex;
+      align-items: center;
+    }
+    .btn {
+      background-color: transparent;
+      border: none;
+      padding: 5px;
+      margin: 5px;
+      cursor: pointer;
+      color: #c7c7c7;
+      font-size: 24px;
+    }
+    .btn:hover {
+      color: #008080;
+    }
+    #branding {
+      font-size: 12px;
+      margin-top: 5px;
+    }
+    #branding a {
+      color: #575757;
+      text-decoration: none;
+    }
+    #branding a:hover {
+      color: #c7c7c7;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="main-container">
+    <div id="graph-container"></div>
+    <div id="bottom-bar">
+      <div id="text-area">Dummy text area</div>
+      <div id="controls-and-branding">
+        <div id="controls">
+          <button class="btn" id="prevBtn">
+            <i class="fas fa-arrow-left"></i>
+          </button>
+          <button class="btn" id="toggleBtn">
+            <i class="fas fa-arrows-alt-v"></i>
+          </button>
+          <button class="btn" id="nextBtn">
+            <i class="fas fa-arrow-right"></i>
+          </button>
+        </div>
+        <div id="branding">
+          <a href="https://github.com/yourusername/yourrepo" target="_blank">Possible Futures</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inline JavaScript -->
+  <script>
+    // Declare showAlternative before using it
+    let showAlternative = false;
+
+    // Main graph data
+    const mainGraph = {
+      nodes: [
+        { data: { id: 'user', label: 'User', icon: 'fas fa-user' }, position: { x: 100, y: 200 } },
+        { data: { id: 'wallet', label: 'Wallet Frontend', icon: 'fas fa-wallet' }, position: { x: 300, y: 100 } },
+        { data: { id: 'node', label: 'Full Node', icon: 'fas fa-server' }, position: { x: 300, y: 300 } },
+        { data: { id: 'builder', label: 'Builder', icon: 'fas fa-tools' }, position: { x: 500, y: 100 } },
+        { data: { id: 'proposer', label: 'Proposer', icon: 'fas fa-user-tie' }, position: { x: 500, y: 300 } },
+        { data: { id: 'nextBlock', label: 'Next Block', icon: 'fas fa-cube' }, position: { x: 700, y: 200 } },
+      ],
+      edges: [
+        { data: { id: 'e1', source: 'user', target: 'wallet' } },
+        { data: { id: 'e2', source: 'user', target: 'node' } },
+        { data: { id: 'e3', source: 'wallet', target: 'builder' } },
+        { data: { id: 'e4', source: 'node', target: 'proposer' } },
+        { data: { id: 'e5', source: 'builder', target: 'nextBlock' } },
+        { data: { id: 'e6', source: 'proposer', target: 'nextBlock' } },
+      ]
+    };
+
+    // Alternative graph data
+    const alternativeGraph = {
+      nodes: [
+        { data: { id: 'userAlt', label: 'User (Alt)', icon: 'fas fa-user' }, position: { x: 100, y: 200 } },
+        { data: { id: 'walletAlt', label: 'Wallet Alternative', icon: 'fas fa-wallet' }, position: { x: 300, y: 100 } },
+        { data: { id: 'serviceAlt', label: 'Service Alt', icon: 'fas fa-network-wired' }, position: { x: 500, y: 200 } },
+      ],
+      edges: [
+        { data: { id: 'eAlt1', source: 'userAlt', target: 'walletAlt' } },
+        { data: { id: 'eAlt2', source: 'walletAlt', target: 'serviceAlt' } },
+      ]
+    };
+
+    // Combine main and alternative graphs
+    const elements = [
+      // Main graph elements
+      ...mainGraph.nodes.map(node => ({ ...node, classes: 'main' })),
+      ...mainGraph.edges.map(edge => ({ ...edge, classes: 'main' })),
+      // Alternative graph elements
+      ...alternativeGraph.nodes.map(node => ({ ...node, classes: 'alternative' })),
+      ...alternativeGraph.edges.map(edge => ({ ...edge, classes: 'alternative' })),
+    ];
+
+    // Initialize Cytoscape
+    const cy = cytoscape({
+      container: document.getElementById('graph-container'),
+      elements: elements,
+      style: [
+        // Node styles
+        {
+          selector: 'node',
+          style: {
+            'background-color': '#3a3a3a',
+            'shape': 'ellipse',
+            'width': '60px',
+            'height': '60px',
+            'border-width': '1px',
+            'border-color': '#c7c7c7',
+            'color': '#c7c7c7',
+            'font-size': '12px',
+            'text-valign': 'bottom',
+            'text-halign': 'center',
+            'text-margin-y': '4px',
+            'label': 'data(label)',
+          }
+        },
+        // Edge styles
+        {
+          selector: 'edge',
+          style: {
+            'width': 2,
+            'line-color': '#575757',
+            'target-arrow-color': '#575757',
+            'target-arrow-shape': 'triangle',
+            'curve-style': 'bezier',
+          }
+        },
+        // Main graph elements
+        {
+          selector: '.main',
+          style: {
+            'opacity': 1,
+          }
+        },
+        // Alternative graph elements
+        {
+          selector: '.alternative',
+          style: {
+            'opacity': 0.3,
+          }
+        },
+        // Selected node styling
+        {
+          selector: ':selected',
+          style: {
+            'background-color': '#008080',
+            'line-color': '#008080',
+            'target-arrow-color': '#008080',
+            'source-arrow-color': '#008080'
+          }
+        }
+      ],
+      layout: {
+        name: 'preset' // Use positions defined in the nodes
+      }
+    });
+
+    // Event listeners for buttons
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      // Logic for next state will go here
+    });
+
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      // Logic for previous state will go here
+    });
+
+    document.getElementById('toggleBtn').addEventListener('click', () => {
+      showAlternative = !showAlternative;
+      updateGraphVisibility();
+    });
+
+    function updateGraphVisibility() {
+      if (showAlternative) {
+        // Dim main graph and hide labels
+        cy.$('.main').style({
+          'opacity': 0.3,
+          'label': ''
+        });
+        // Highlight alternative graph and show labels
+        cy.$('.alternative').style({
+          'opacity': 1,
+          'label': 'data(label)'
+        });
+      } else {
+        // Highlight main graph and show labels
+        cy.$('.main').style({
+          'opacity': 1,
+          'label': 'data(label)'
+        });
+        // Dim alternative graph and hide labels
+        cy.$('.alternative').style({
+          'opacity': 0.3,
+          'label': ''
+        });
+      }
+    }
+
+    // Initial call to set graph visibility
+    updateGraphVisibility();
+  </script>
+</body>
+</html>
