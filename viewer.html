@@ -14,11 +14,12 @@
   <style>
     body {
       margin: 0;
-      background-color: #1e1e1e;
-      color: #c7c7c7;
+      background-color: #2a2a2a;
+      color: #e0e0e0;
       font-family: Arial, sans-serif;
     }
     #main-container {
+      position: relative;
       border: 2px solid #3a3a3a;
       padding: 10px;
       height: 100vh;
@@ -28,7 +29,7 @@
     }
     #graph-container {
       flex: 1;
-      background-color: #1e1e1e;
+      background-color: #2a2a2a;
     }
     #bottom-bar {
       display: flex;
@@ -36,7 +37,7 @@
       align-items: flex-start;
     }
     #text-area {
-      color: #c7c7c7;
+      color: #e0e0e0;
       padding: 10px;
       flex: 1;
     }
@@ -56,22 +57,45 @@
       padding: 5px;
       margin: 5px;
       cursor: pointer;
-      color: #c7c7c7;
+      color: #00ced1; /* Match the selected node color */
       font-size: 24px;
     }
     .btn:hover {
-      color: #008080;
+      color: #1de9b6; /* Even brighter teal on hover */
     }
     #branding {
       font-size: 12px;
       margin-top: 5px;
     }
     #branding a {
-      color: #575757;
+      color: #a0a0a0;
       text-decoration: none;
     }
     #branding a:hover {
-      color: #c7c7c7;
+      color: #e0e0e0;
+    }
+    /* Legend styles */
+    #legend {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: rgba(50, 50, 50, 0.9);
+      padding: 15px;
+      border-radius: 4px;
+      color: #e0e0e0;
+      font-size: 16px;
+    }
+    #legend .legend-item {
+      cursor: pointer;
+      color: #a0a0a0;
+      margin-bottom: 5px;
+    }
+    #legend .legend-item:last-child {
+      margin-bottom: 0;
+    }
+    #legend .legend-item.active {
+      color: #e0e0e0;
+      font-weight: bold;
     }
   </style>
 </head>
@@ -79,15 +103,16 @@
 
   <div id="main-container">
     <div id="graph-container"></div>
+
+    <!-- Legend -->
+    <div id="legend"></div>
+
     <div id="bottom-bar">
-      <div id="text-area">Dummy text area</div>
+      <div id="text-area">Loading...</div>
       <div id="controls-and-branding">
         <div id="controls">
           <button class="btn" id="prevBtn">
             <i class="fas fa-arrow-left"></i>
-          </button>
-          <button class="btn" id="toggleBtn">
-            <i class="fas fa-arrows-alt-v"></i>
           </button>
           <button class="btn" id="nextBtn">
             <i class="fas fa-arrow-right"></i>
@@ -102,158 +127,222 @@
 
   <!-- Inline JavaScript -->
   <script>
-    // Declare showAlternative before using it
-    let showAlternative = false;
+    let currentGraphId = 'main'; // Default to 'main' graph
+    let currentStep = 0; // Track the current step in the sequence
 
-    // Main graph data
-    const mainGraph = {
-      nodes: [
-        { data: { id: 'user', label: 'User', icon: 'fas fa-user' }, position: { x: 100, y: 200 } },
-        { data: { id: 'wallet', label: 'Wallet Frontend', icon: 'fas fa-wallet' }, position: { x: 300, y: 100 } },
-        { data: { id: 'node', label: 'Full Node', icon: 'fas fa-server' }, position: { x: 300, y: 300 } },
-        { data: { id: 'builder', label: 'Builder', icon: 'fas fa-tools' }, position: { x: 500, y: 100 } },
-        { data: { id: 'proposer', label: 'Proposer', icon: 'fas fa-user-tie' }, position: { x: 500, y: 300 } },
-        { data: { id: 'nextBlock', label: 'Next Block', icon: 'fas fa-cube' }, position: { x: 700, y: 200 } },
-      ],
-      edges: [
-        { data: { id: 'e1', source: 'user', target: 'wallet' } },
-        { data: { id: 'e2', source: 'user', target: 'node' } },
-        { data: { id: 'e3', source: 'wallet', target: 'builder' } },
-        { data: { id: 'e4', source: 'node', target: 'proposer' } },
-        { data: { id: 'e5', source: 'builder', target: 'nextBlock' } },
-        { data: { id: 'e6', source: 'proposer', target: 'nextBlock' } },
-      ]
-    };
-
-    // Alternative graph data
-    const alternativeGraph = {
-      nodes: [
-        { data: { id: 'userAlt', label: 'User (Alt)', icon: 'fas fa-user' }, position: { x: 100, y: 200 } },
-        { data: { id: 'walletAlt', label: 'Wallet Alternative', icon: 'fas fa-wallet' }, position: { x: 300, y: 100 } },
-        { data: { id: 'serviceAlt', label: 'Service Alt', icon: 'fas fa-network-wired' }, position: { x: 500, y: 200 } },
-      ],
-      edges: [
-        { data: { id: 'eAlt1', source: 'userAlt', target: 'walletAlt' } },
-        { data: { id: 'eAlt2', source: 'walletAlt', target: 'serviceAlt' } },
-      ]
-    };
-
-    // Combine main and alternative graphs
-    const elements = [
-      // Main graph elements
-      ...mainGraph.nodes.map(node => ({ ...node, classes: 'main' })),
-      ...mainGraph.edges.map(edge => ({ ...edge, classes: 'main' })),
-      // Alternative graph elements
-      ...alternativeGraph.nodes.map(node => ({ ...node, classes: 'alternative' })),
-      ...alternativeGraph.edges.map(edge => ({ ...edge, classes: 'alternative' })),
+    // Define all graphs in an array
+    const graphs = [
+      {
+        id: 'main',
+        name: 'Main Process',
+        sequence: [
+          { nodeId: 'user', annotation: 'User initiates the process.' },
+          { nodeId: 'wallet', annotation: 'User interacts with the wallet frontend.' },
+          { nodeId: 'builder', annotation: 'Wallet sends transaction to the builder.' },
+          { nodeId: 'nextBlock', annotation: 'Builder includes transaction in the next block.' },
+        ],
+        nodes: [
+          { data: { id: 'user', label: 'User' }, position: { x: 100, y: 200 } },
+          { data: { id: 'wallet', label: 'Wallet Frontend' }, position: { x: 300, y: 100 } },
+          { data: { id: 'node', label: 'Full Node' }, position: { x: 300, y: 300 } },
+          { data: { id: 'builder', label: 'Builder' }, position: { x: 500, y: 100 } },
+          { data: { id: 'proposer', label: 'Proposer' }, position: { x: 500, y: 300 } },
+          { data: { id: 'nextBlock', label: 'Next Block' }, position: { x: 700, y: 200 } },
+        ],
+        edges: [
+          { data: { id: 'e1', source: 'user', target: 'wallet' } },
+          { data: { id: 'e2', source: 'user', target: 'node' } },
+          { data: { id: 'e3', source: 'wallet', target: 'builder' } },
+          { data: { id: 'e4', source: 'node', target: 'proposer' } },
+          { data: { id: 'e5', source: 'builder', target: 'nextBlock' } },
+          { data: { id: 'e6', source: 'proposer', target: 'nextBlock' } },
+        ],
+      },
+      {
+        id: 'alternative1',
+        name: 'Alternative Process 1',
+        sequence: [
+          { nodeId: 'userAlt1', annotation: 'User starts the alternative process.' },
+          { nodeId: 'walletAlt1', annotation: 'User uses an alternative wallet.' },
+          { nodeId: 'serviceAlt1', annotation: 'Wallet connects to alternative service.' },
+        ],
+        nodes: [
+          { data: { id: 'userAlt1', label: 'User (Alt 1)' }, position: { x: 100, y: 200 } },
+          { data: { id: 'walletAlt1', label: 'Wallet Alternative 1' }, position: { x: 300, y: 100 } },
+          { data: { id: 'serviceAlt1', label: 'Service Alt 1' }, position: { x: 500, y: 200 } },
+        ],
+        edges: [
+          { data: { id: 'eAlt1-1', source: 'userAlt1', target: 'walletAlt1' } },
+          { data: { id: 'eAlt1-2', source: 'walletAlt1', target: 'serviceAlt1' } },
+        ],
+      },
+      // ... add more graphs as needed
     ];
+
+    // Combine all graph elements
+    const elements = [];
+
+    graphs.forEach(graph => {
+      const graphClass = graph.id; // Use graph ID as class
+      // Add nodes
+      elements.push(...graph.nodes.map(node => ({ ...node, classes: graphClass })));
+      // Add edges
+      elements.push(...graph.edges.map(edge => ({ ...edge, classes: graphClass })));
+    });
 
     // Initialize Cytoscape
     const cy = cytoscape({
       container: document.getElementById('graph-container'),
       elements: elements,
       style: [
-        // Node styles
+        // General node styles (without 'content')
         {
           selector: 'node',
           style: {
-            'background-color': '#3a3a3a',
+            'background-color': '#006064',
             'shape': 'ellipse',
             'width': '60px',
             'height': '60px',
-            'border-width': '1px',
-            'border-color': '#c7c7c7',
-            'color': '#c7c7c7',
-            'font-size': '12px',
+            'border-width': '2px',
+            'border-color': '#004d40',
+            'color': '#e0e0e0',
+            'font-size': '14px',
             'text-valign': 'bottom',
             'text-halign': 'center',
             'text-margin-y': '4px',
-            'label': 'data(label)',
+            // Removed 'content': 'data(label)'
           }
         },
-        // Edge styles
+        // General edge styles
         {
           selector: 'edge',
           style: {
-            'width': 2,
-            'line-color': '#575757',
-            'target-arrow-color': '#575757',
+            'width': 3,
+            'line-color': '#004d40',
+            'target-arrow-color': '#004d40',
             'target-arrow-shape': 'triangle',
             'curve-style': 'bezier',
           }
         },
-        // Main graph elements
-        {
-          selector: '.main',
-          style: {
-            'opacity': 1,
-          }
-        },
-        // Alternative graph elements
-        {
-          selector: '.alternative',
-          style: {
-            'opacity': 0.3,
-          }
-        },
         // Selected node styling
         {
-          selector: ':selected',
+          selector: 'node:selected',
           style: {
-            'background-color': '#008080',
-            'line-color': '#008080',
-            'target-arrow-color': '#008080',
-            'source-arrow-color': '#008080'
+            'background-color': '#00ced1',
+            'line-color': '#00ced1',
+            'target-arrow-color': '#00ced1',
+            'source-arrow-color': '#00ced1'
+          }
+        },
+        // Active graph nodes (show labels)
+        {
+          selector: 'node.active',
+          style: {
+            'content': 'data(label)'
+          }
+        },
+        // Inactive graph nodes (hide labels)
+        {
+          selector: 'node.inactive',
+          style: {
+            'content': ''
           }
         }
       ],
       layout: {
-        name: 'preset' // Use positions defined in the nodes
+        name: 'preset'
       }
     });
 
-    // Event listeners for buttons
+    // Build legend
+    const legendDiv = document.getElementById('legend');
+
+    graphs.forEach(graph => {
+      const div = document.createElement('div');
+      div.classList.add('legend-item');
+      div.setAttribute('data-graph', graph.id);
+      div.textContent = graph.name;
+      legendDiv.appendChild(div);
+    });
+
+    // Event listeners for legend items
+    const legendItems = document.querySelectorAll('#legend .legend-item');
+
+    legendItems.forEach(item => {
+      item.addEventListener('click', () => {
+        const graphId = item.getAttribute('data-graph');
+        currentGraphId = graphId;
+        currentStep = 0; // Reset to first step
+        updateGraphVisibility();
+        updateSelection();
+        updateAnnotation();
+      });
+    });
+
+    function updateLegend() {
+      legendItems.forEach(item => {
+        const graphId = item.getAttribute('data-graph');
+        if (graphId === currentGraphId) {
+          item.classList.add('active');
+        } else {
+          item.classList.remove('active');
+        }
+      });
+    }
+
+    function updateGraphVisibility() {
+      graphs.forEach(graph => {
+        const graphElements = cy.$(`.${graph.id}`);
+        if (graph.id === currentGraphId) {
+          // Highlight current graph
+          graphElements.removeClass('inactive').addClass('active');
+          graphElements.style('opacity', 1);
+        } else {
+          // Dim other graphs
+          graphElements.removeClass('active').addClass('inactive');
+          graphElements.style('opacity', 0.3);
+        }
+      });
+      updateLegend();
+    }
+
+    function updateSelection() {
+      cy.$('node').unselect(); // Unselect all nodes
+      const currentGraph = graphs.find(g => g.id === currentGraphId);
+      const currentNodeId = currentGraph.sequence[currentStep].nodeId;
+      cy.$(`#${currentNodeId}`).select(); // Select current node
+    }
+
+    function updateAnnotation() {
+      const textArea = document.getElementById('text-area');
+      const currentGraph = graphs.find(g => g.id === currentGraphId);
+      const annotation = currentGraph.sequence[currentStep].annotation;
+      textArea.textContent = annotation;
+    }
+
+    // Event listeners for navigation buttons
     document.getElementById('nextBtn').addEventListener('click', () => {
-      // Logic for next state will go here
+      const currentGraph = graphs.find(g => g.id === currentGraphId);
+      if (currentStep < currentGraph.sequence.length - 1) {
+        currentStep++;
+        updateSelection();
+        updateAnnotation();
+      }
     });
 
     document.getElementById('prevBtn').addEventListener('click', () => {
-      // Logic for previous state will go here
-    });
-
-    document.getElementById('toggleBtn').addEventListener('click', () => {
-      showAlternative = !showAlternative;
-      updateGraphVisibility();
-    });
-
-    function updateGraphVisibility() {
-      if (showAlternative) {
-        // Dim main graph and hide labels
-        cy.$('.main').style({
-          'opacity': 0.3,
-          'label': ''
-        });
-        // Highlight alternative graph and show labels
-        cy.$('.alternative').style({
-          'opacity': 1,
-          'label': 'data(label)'
-        });
-      } else {
-        // Highlight main graph and show labels
-        cy.$('.main').style({
-          'opacity': 1,
-          'label': 'data(label)'
-        });
-        // Dim alternative graph and hide labels
-        cy.$('.alternative').style({
-          'opacity': 0.3,
-          'label': ''
-        });
+      if (currentStep > 0) {
+        currentStep--;
+        updateSelection();
+        updateAnnotation();
       }
-    }
+    });
 
-    // Initial call to set graph visibility
+    // Initial call to set graph visibility and legend
+    // Ensure legendItems is defined before calling these functions
     updateGraphVisibility();
+    updateSelection();
+    updateAnnotation();
   </script>
 </body>
 </html>
