@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Graph Editor</title>
+  
+  <!-- Cytoscape.js CDN -->
+  <script src="https://unpkg.com/cytoscape@3.22.0/dist/cytoscape.min.js"></script>
+  
+  <!-- Font Awesome CDN for icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+  
+  <!-- Inline CSS -->
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      color: #e0e0e0;
+      background-color: #2a2a2a;
+    }
+    #editor-container {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+    }
+    /* Menu Bar */
+    #menu-bar {
+      background-color: #333;
+      padding: 10px;
+      display: flex;
+      align-items: center;
+    }
+    #menu-bar .menu-item {
+      margin-right: 20px;
+      cursor: pointer;
+      color: #e0e0e0;
+    }
+    #menu-bar .menu-item:hover {
+      color: #00ced1;
+    }
+    /* Main Content */
+    #main-content {
+      flex: 1;
+      display: flex;
+    }
+    /* Toolbar */
+    #toolbar {
+      width: 60px;
+      background-color: #1f1f1f;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px 0;
+    }
+    #toolbar .tool-btn {
+      width: 40px;
+      height: 40px;
+      margin: 10px 0;
+      background-color: #333;
+      border: none;
+      color: #e0e0e0;
+      font-size: 20px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    #toolbar .tool-btn:hover {
+      background-color: #00ced1;
+      color: #2a2a2a;
+    }
+    /* Graph Canvas */
+    #graph-container {
+      flex: 1;
+      background-color: #2a2a2a;
+    }
+    /* Properties Panel */
+    #properties-panel {
+      width: 250px;
+      background-color: #1f1f1f;
+      padding: 10px;
+      box-sizing: border-box;
+    }
+    #properties-panel h2 {
+      margin-top: 0;
+      color: #00ced1;
+    }
+    #properties-panel label {
+      display: block;
+      margin-top: 10px;
+      color: #e0e0e0;
+    }
+    #properties-panel input, #properties-panel select {
+      width: 100%;
+      padding: 5px;
+      background-color: #333;
+      border: none;
+      color: #e0e0e0;
+      margin-top: 5px;
+    }
+    #properties-panel input:focus, #properties-panel select:focus {
+      outline: none;
+      border: 1px solid #00ced1;
+    }
+  </style>
+</head>
+<body>
+
+  <div id="editor-container">
+    <!-- Menu Bar -->
+    <div id="menu-bar">
+      <div class="menu-item" id="new-graph">New Graph</div>
+      <div class="menu-item" id="load-graph">Load Graph</div>
+      <div class="menu-item" id="save-graph">Save Graph</div>
+      <div class="menu-item" id="export-graph">Export Graph</div>
+    </div>
+    
+    <!-- Main Content -->
+    <div id="main-content">
+      <!-- Toolbar -->
+      <div id="toolbar">
+        <button class="tool-btn" id="add-node" title="Add Node">
+          <i class="fas fa-plus-circle"></i>
+        </button>
+        <button class="tool-btn" id="add-edge" title="Add Edge">
+          <i class="fas fa-arrow-right"></i>
+        </button>
+        <button class="tool-btn" id="select-tool" title="Select Tool">
+          <i class="fas fa-mouse-pointer"></i>
+        </button>
+        <button class="tool-btn" id="delete-element" title="Delete Element">
+          <i class="fas fa-trash"></i>
+        </button>
+      </div>
+      
+      <!-- Graph Canvas -->
+      <div id="graph-container"></div>
+      
+      <!-- Properties Panel -->
+      <div id="properties-panel">
+        <h2>Properties</h2>
+        <!-- Properties will be displayed here -->
+        <div id="no-selection">No element selected.</div>
+        <div id="node-properties" style="display: none;">
+          <label for="node-label">Label:</label>
+          <input type="text" id="node-label">
+          
+          <label for="node-shape">Shape:</label>
+          <select id="node-shape">
+            <option value="ellipse">Ellipse</option>
+            <option value="rectangle">Rectangle</option>
+            <option value="roundrectangle">Round Rectangle</option>
+            <option value="triangle">Triangle</option>
+            <option value="diamond">Diamond</option>
+            <option value="pentagon">Pentagon</option>
+            <option value="hexagon">Hexagon</option>
+            <option value="heptagon">Heptagon</option>
+            <option value="octagon">Octagon</option>
+            <option value="star">Star</option>
+            <option value="vee">Vee</option>
+            <option value="rhomboid">Rhomboid</option>
+          </select>
+        </div>
+        <div id="edge-properties" style="display: none;">
+          <label for="edge-label">Label:</label>
+          <input type="text" id="edge-label">
+          
+          <!-- Additional edge properties can be added here -->
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Inline JavaScript -->
+  <script>
+    // Future JavaScript code will go here
+  </script>
+</body>
+</html>
