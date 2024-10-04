@@ -127,113 +127,120 @@
 
   <!-- Inline JavaScript -->
   <script>
-    // Function to get URL parameters
-    function getUrlParameter(name) {
-      const urlParams = new URLSearchParams(window.location.search);
-      return urlParams.get(name);
-    }
+    window.onload = function() {
+      // Function to get URL parameters
+      function getUrlParameter(name) {
+        const urlParams = new URLSearchParams(window.location.search);
+        return urlParams.get(name);
+      }
 
-    // Get the 'data' parameter from the URL
-    const dataUrl = getUrlParameter('data');
+      // Get the 'data' parameter from the URL
+      const dataUrl = getUrlParameter('data');
 
-    if (!dataUrl) {
-      alert('Error: No data URL specified in the "data" URL parameter.');
-    } else {
-      // Fetch the JSON file
-      fetch(dataUrl)
-        .then(response => {
-          if (!response.ok) {
-            throw new Error('Network response was not OK');
-          }
-          return response.json();
-        })
-        .then(jsonData => {
-          initializeApp(jsonData);
-        })
-        .catch(error => {
-          console.error('Error fetching or parsing data:', error);
-          alert('Error fetching or parsing data. See console for details.');
+      if (!dataUrl) {
+        alert('Error: No data URL specified in the "data" URL parameter.');
+      } else {
+        // Fetch the JSON file
+        fetch(dataUrl)
+          .then(response => {
+            if (!response.ok) {
+              throw new Error('Network response was not OK');
+            }
+            return response.json();
+          })
+          .then(jsonData => {
+            initializeApp(jsonData);
+          })
+          .catch(error => {
+            console.error('Error fetching or parsing data:', error);
+            alert('Error fetching or parsing data. See console for details.');
+          });
+      }
+
+      function initializeApp(graphs) {
+        let currentGraphId = graphs[0]?.id || 'main'; // Default to first graph's ID
+        let currentStep = 0; // Track the current step in the sequence
+
+        // Combine all graph elements
+        const elements = [];
+
+        graphs.forEach(graph => {
+          const graphClass = graph.id; // Use graph ID as class
+          // Add nodes
+          elements.push(...graph.nodes.map(node => ({ ...node, classes: graphClass })));
+          // Add edges
+          elements.push(...graph.edges.map(edge => ({ ...edge, classes: graphClass })));
         });
-    }
 
-    function initializeApp(graphs) {
-      let currentGraphId = graphs[0]?.id || 'main'; // Default to first graph's ID
-      let currentStep = 0; // Track the current step in the sequence
-
-      // Combine all graph elements
-      const elements = [];
-
-      graphs.forEach(graph => {
-        const graphClass = graph.id; // Use graph ID as class
-        // Add nodes
-        elements.push(...graph.nodes.map(node => ({ ...node, classes: graphClass })));
-        // Add edges
-        elements.push(...graph.edges.map(edge => ({ ...edge, classes: graphClass })));
-      });
-
-      // Initialize Cytoscape
-      const cy = cytoscape({
-        container: document.getElementById('graph-container'),
-        elements: elements,
-        style: [
-          // Node styles
-          {
-            selector: 'node',
-            style: {
-              'background-color': '#006064', /* Darker teal for default nodes */
-              'shape': 'ellipse',
-              'width': '60px',
-              'height': '60px',
-              'border-width': '2px',
-              'border-color': '#004d40',
-              'color': '#e0e0e0',
-              'font-size': '14px',
-              'text-valign': 'bottom',
-              'text-halign': 'center',
-              'text-margin-y': '4px',
-              // Removed 'content': 'data(label)'
+        // Initialize Cytoscape
+        const cy = cytoscape({
+          container: document.getElementById('graph-container'),
+          elements: elements,
+          style: [
+            // Default node styles
+            {
+              selector: 'node',
+              style: {
+                'background-color': '#006064',
+                'shape': 'ellipse', // Default shape
+                'width': '60px',
+                'height': '60px',
+                'border-width': '2px',
+                'border-color': '#004d40',
+                'color': '#e0e0e0',
+                'font-size': '14px',
+                'text-valign': 'bottom',
+                'text-halign': 'center',
+                'text-margin-y': '4px',
+              }
+            },
+            // Apply shape mapping only to nodes with 'nodeShape' data defined
+            {
+              selector: 'node[nodeShape]',
+              style: {
+                'shape': 'data(nodeShape)'
+              }
+            },
+            // Edge styles
+            {
+              selector: 'edge',
+              style: {
+                'width': 3,
+                'line-color': '#004d40',
+                'target-arrow-color': '#004d40',
+                'target-arrow-shape': 'triangle',
+                'curve-style': 'bezier',
+              }
+            },
+            // Selected node styling
+            {
+              selector: 'node:selected',
+              style: {
+                'background-color': '#00ced1',
+                'line-color': '#00ced1',
+                'target-arrow-color': '#00ced1',
+                'source-arrow-color': '#00ced1'
+              }
+            },
+            // Active graph nodes (show labels)
+            {
+              selector: 'node.active',
+              style: {
+                'content': 'data(label)'
+              }
+            },
+            // Inactive graph nodes (hide labels)
+            {
+              selector: 'node.inactive',
+              style: {
+                'content': ''
+              }
             }
-          },
-          // Edge styles
-          {
-            selector: 'edge',
-            style: {
-              'width': 3,
-              'line-color': '#004d40',
-              'target-arrow-color': '#004d40',
-              'target-arrow-shape': 'triangle',
-              'curve-style': 'bezier',
-            }
-          },
-          // Selected node styling
-          {
-            selector: 'node:selected',
-            style: {
-              'background-color': '#00ced1',
-              'line-color': '#00ced1',
-              'target-arrow-color': '#00ced1',
-              'source-arrow-color': '#00ced1'
-            }
-          },
-          // Active graph nodes (show labels)
-          {
-            selector: 'node.active',
-            style: {
-              'content': 'data(label)'
-            }
-          },
-          // Inactive graph nodes (hide labels)
-          {
-            selector: 'node.inactive',
-            style: {
-              'content': ''
-            }
+          ],
+          layout: {
+            name: 'preset' // Use positions defined in the nodes
           }
-        ],
-        layout: {
-          name: 'preset' // Use positions defined in the nodes
-        }
-      });
+        });
 
       // Build legend
       const legendDiv = document.getElementById('legend');
@@ -324,6 +331,7 @@
       updateSelection();
       updateAnnotation();
     }
+  };
   </script>
 </body>
 </html>

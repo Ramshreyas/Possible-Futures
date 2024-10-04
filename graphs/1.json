@@ -9,12 +9,12 @@
         { "nodeId": "nextBlock", "annotation": "Builder includes transaction in the next block." }
       ],
       "nodes": [
-        { "data": { "id": "user", "label": "User" }, "position": { "x": 100, "y": 200 } },
-        { "data": { "id": "wallet", "label": "Wallet Frontend" }, "position": { "x": 300, "y": 100 } },
-        { "data": { "id": "node", "label": "Full Node" }, "position": { "x": 300, "y": 300 } },
-        { "data": { "id": "builder", "label": "Builder" }, "position": { "x": 500, "y": 100 } },
-        { "data": { "id": "proposer", "label": "Proposer" }, "position": { "x": 500, "y": 300 } },
-        { "data": { "id": "nextBlock", "label": "Next Block" }, "position": { "x": 700, "y": 200 } }
+        { "data": { "id": "user", "label": "User", "nodeShape": "ellipse" }, "position": { "x": 100, "y": 200 } },
+        { "data": { "id": "wallet", "label": "Wallet Frontend", "nodeShape": "roundrectangle" }, "position": { "x": 300, "y": 100 } },
+        { "data": { "id": "node", "label": "Full Node", "nodeShape": "hexagon" }, "position": { "x": 300, "y": 300 } },
+        { "data": { "id": "builder", "label": "Builder", "nodeShape": "diamond" }, "position": { "x": 500, "y": 100 } },
+        { "data": { "id": "proposer", "label": "Proposer", "nodeShape": "triangle" }, "position": { "x": 500, "y": 300 } },
+        { "data": { "id": "nextBlock", "label": "Next Block", "nodeShape": "rectangle" }, "position": { "x": 700, "y": 200 } }
       ],
       "edges": [
         { "data": { "id": "e1", "source": "user", "target": "wallet" } },
@@ -34,14 +34,14 @@
         { "nodeId": "serviceAlt1", "annotation": "Wallet connects to alternative service." }
       ],
       "nodes": [
-        { "data": { "id": "userAlt1", "label": "User (Alt 1)" }, "position": { "x": 100, "y": 200 } },
-        { "data": { "id": "walletAlt1", "label": "Wallet Alternative 1" }, "position": { "x": 300, "y": 100 } },
-        { "data": { "id": "serviceAlt1", "label": "Service Alt 1" }, "position": { "x": 500, "y": 200 } }
+        { "data": { "id": "userAlt1", "label": "User (Alt 1)", "nodeShape": "ellipse" }, "position": { "x": 100, "y": 200 } },
+        { "data": { "id": "walletAlt1", "label": "Wallet Alternative 1", "nodeShape": "roundrectangle" }, "position": { "x": 300, "y": 100 } },
+        { "data": { "id": "serviceAlt1", "label": "Service Alt 1", "nodeShape": "hexagon" }, "position": { "x": 500, "y": 200 } }
       ],
       "edges": [
         { "data": { "id": "eAlt1-1", "source": "userAlt1", "target": "walletAlt1" } },
         { "data": { "id": "eAlt1-2", "source": "walletAlt1", "target": "serviceAlt1" } }
       ]
     }
-  ]
+]
   
