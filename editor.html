@@ -277,7 +277,15 @@
       ],
       layout: {
         name: 'preset' // Use positions defined in the nodes
-      }
+      },
+      // Enable zooming and panning
+      userZoomingEnabled: true,
+      userPanningEnabled: true,
+      zoomingEnabled: true,
+      panningEnabled: true,
+      minZoom: 0.1,
+      maxZoom: 10,
+      wheelSensitivity: 0.2,
     });
 
     // Enable node dragging
@@ -291,6 +299,9 @@
     document.getElementById('text-area').textContent = 'Node Annotation';
 
     // Set initial zoom and pan
+    cy.ready(function() {
+      cy.fit();
+    });
     cy.zoom(1); // 100% zoom
     cy.pan({ x: 0, y: 0 }); // Top-left corner at (0,0)
 
