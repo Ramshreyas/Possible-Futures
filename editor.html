@@ -407,6 +407,7 @@
     const nodeShapeSelect = document.getElementById('node-shape');
     const nodeAnnotationInput = document.getElementById('node-annotation');
     const textArea = document.getElementById('text-area');
+    const addNodeBtn = document.getElementById('add-node-btn');
 
     // Function to update properties panel with selected node's data
     function updatePropertiesPanel(node) {
@@ -478,6 +479,59 @@
     cy.ready(function() {
       cy.zoom(1);
       cy.pan({ x: 0, y: 0 });
+    });
+
+    // Event listener for "Add Node" button
+    addNodeBtn.addEventListener('click', function() {
+      if (!selectedNode) {
+        alert('Please select a node to add a new node relative to it.');
+        return;
+      }
+
+      // Generate a unique ID for the new node
+      const newNodeId = 'node' + (cy.nodes().length + 1);
+
+      // Calculate position for the new node (e.g., to the right of the selected node)
+      const selectedNodePosition = selectedNode.position();
+      const newNodePosition = {
+        x: selectedNodePosition.x + 100, // 100 pixels to the right
+        y: selectedNodePosition.y
+      };
+
+      // Add the new node with default properties
+      const newNode = cy.add({
+        group: 'nodes',
+        data: {
+          id: newNodeId,
+          label: 'New Node',
+          nodeShape: 'ellipse',
+          annotation: 'New node annotation'
+        },
+        position: newNodePosition
+      });
+
+      // Add edge between selected node and new node
+      cy.add({
+        group: 'edges',
+        data: {
+          id: 'edge' + (cy.edges().length + 1),
+          source: selectedNode.id(),
+          target: newNodeId
+        }
+      });
+
+      // Enable dragging for the new node
+      newNode.grabify();
+
+      // Deselect all nodes and select the new node
+      cy.nodes().unselect();
+      newNode.select();
+
+      // Optionally, pan to the new node
+      cy.animate({
+        center: { eles: newNode },
+        duration: 500
+      });
     });
   </script>
 </body>
