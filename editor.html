@@ -2,84 +2,132 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Graph Editor</title>
+  <title>Possible Futures Editor</title>
   
   <!-- Cytoscape.js CDN -->
   <script src="https://unpkg.com/cytoscape@3.22.0/dist/cytoscape.min.js"></script>
   
-  <!-- Font Awesome CDN for icons -->
+  <!-- Font Awesome CDN -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
   
   <!-- Inline CSS -->
   <style>
     body {
       margin: 0;
-      font-family: Arial, sans-serif;
-      color: #e0e0e0;
       background-color: #2a2a2a;
+      color: #e0e0e0;
+      font-family: Arial, sans-serif;
     }
-    #editor-container {
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-    }
-    /* Menu Bar */
-    #menu-bar {
-      background-color: #333;
+    #main-container {
+      position: relative;
+      border: 2px solid #3a3a3a;
       padding: 10px;
-      display: flex;
-      align-items: center;
-    }
-    #menu-bar .menu-item {
-      margin-right: 20px;
-      cursor: pointer;
-      color: #e0e0e0;
-    }
-    #menu-bar .menu-item:hover {
-      color: #00ced1;
-    }
-    /* Main Content */
-    #main-content {
-      flex: 1;
-      display: flex;
-    }
-    /* Toolbar */
-    #toolbar {
-      width: 60px;
-      background-color: #1f1f1f;
+      height: 100vh;
+      box-sizing: border-box;
       display: flex;
       flex-direction: column;
-      align-items: center;
-      padding: 10px 0;
     }
-    #toolbar .tool-btn {
-      width: 40px;
-      height: 40px;
-      margin: 10px 0;
-      background-color: #333;
-      border: none;
-      color: #e0e0e0;
-      font-size: 20px;
-      cursor: pointer;
+    #graph-and-properties {
       display: flex;
-      align-items: center;
-      justify-content: center;
+      flex: 1;
+      overflow: hidden; /* Prevents overflow when resizing */
     }
-    #toolbar .tool-btn:hover {
-      background-color: #00ced1;
-      color: #2a2a2a;
-    }
-    /* Graph Canvas */
     #graph-container {
       flex: 1;
       background-color: #2a2a2a;
     }
+    #bottom-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+    }
+    #text-area {
+      color: #e0e0e0;
+      padding: 10px;
+      flex: 1;
+    }
+    #controls-and-branding {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      padding: 10px;
+    }
+    #controls {
+      display: flex;
+      align-items: center;
+    }
+    .btn {
+      background-color: transparent;
+      border: none;
+      padding: 5px;
+      margin: 5px;
+      cursor: pointer;
+      color: #00ced1;
+      font-size: 24px;
+    }
+    .btn:hover {
+      color: #1de9b6;
+    }
+    #branding {
+      font-size: 12px;
+      margin-top: 5px;
+    }
+    #branding a {
+      color: #a0a0a0;
+      text-decoration: none;
+    }
+    #branding a:hover {
+      color: #e0e0e0;
+    }
+    /* Legend styles */
+    #legend {
+      position: absolute;
+      top: 10px;
+      right: 270px;
+      background-color: rgba(50, 50, 50, 0.9);
+      padding: 15px;
+      border-radius: 4px;
+      color: #e0e0e0;
+      font-size: 16px;
+    }
+    #legend .legend-item {
+      cursor: pointer;
+      color: #a0a0a0;
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+    }
+    #legend .legend-item.active {
+      color: #e0e0e0;
+      font-weight: bold;
+    }
+    #legend .legend-item input {
+      background-color: transparent;
+      border: none;
+      color: #e0e0e0;
+      font-size: 16px;
+      flex: 1;
+    }
+    #legend .legend-item input:focus {
+      outline: none;
+      border-bottom: 1px solid #00ced1;
+    }
+    #legend .add-graph-btn {
+      margin-top: 10px;
+      cursor: pointer;
+      color: #00ced1;
+      display: flex;
+      align-items: center;
+    }
     /* Properties Panel */
     #properties-panel {
-      width: 250px;
-      background-color: #1f1f1f;
-      padding: 10px;
+      width: 250px; /* Fixed width */
+      background-color: rgba(50, 50, 50, 0.9);
+      padding: 15px;
+      border-left: 2px solid #3a3a3a; /* Optional: to separate visually from graph */
       box-sizing: border-box;
+      color: #e0e0e0;
+      overflow-y: auto; /* Allows scrolling if content exceeds panel height */
     }
     #properties-panel h2 {
       margin-top: 0;
@@ -88,17 +136,17 @@
     #properties-panel label {
       display: block;
       margin-top: 10px;
-      color: #e0e0e0;
     }
-    #properties-panel input, #properties-panel select {
+    #properties-panel input, #properties-panel select, #properties-panel textarea {
       width: 100%;
       padding: 5px;
       background-color: #333;
       border: none;
       color: #e0e0e0;
       margin-top: 5px;
+      box-sizing: border-box;
     }
-    #properties-panel input:focus, #properties-panel select:focus {
+    #properties-panel input:focus, #properties-panel select:focus, #properties-panel textarea:focus {
       outline: none;
       border: 1px solid #00ced1;
     }
@@ -106,66 +154,69 @@
 </head>
 <body>
 
-  <div id="editor-container">
-    <!-- Menu Bar -->
-    <div id="menu-bar">
-      <div class="menu-item" id="new-graph">New Graph</div>
-      <div class="menu-item" id="load-graph">Load Graph</div>
-      <div class="menu-item" id="save-graph">Save Graph</div>
-      <div class="menu-item" id="export-graph">Export Graph</div>
-    </div>
-    
-    <!-- Main Content -->
-    <div id="main-content">
-      <!-- Toolbar -->
-      <div id="toolbar">
-        <button class="tool-btn" id="add-node" title="Add Node">
-          <i class="fas fa-plus-circle"></i>
-        </button>
-        <button class="tool-btn" id="add-edge" title="Add Edge">
-          <i class="fas fa-arrow-right"></i>
-        </button>
-        <button class="tool-btn" id="select-tool" title="Select Tool">
-          <i class="fas fa-mouse-pointer"></i>
-        </button>
-        <button class="tool-btn" id="delete-element" title="Delete Element">
-          <i class="fas fa-trash"></i>
-        </button>
-      </div>
-      
-      <!-- Graph Canvas -->
+  <div id="main-container">
+    <div id="graph-and-properties">
       <div id="graph-container"></div>
-      
+
       <!-- Properties Panel -->
       <div id="properties-panel">
         <h2>Properties</h2>
-        <!-- Properties will be displayed here -->
-        <div id="no-selection">No element selected.</div>
-        <div id="node-properties" style="display: none;">
-          <label for="node-label">Label:</label>
-          <input type="text" id="node-label">
-          
-          <label for="node-shape">Shape:</label>
-          <select id="node-shape">
-            <option value="ellipse">Ellipse</option>
-            <option value="rectangle">Rectangle</option>
-            <option value="roundrectangle">Round Rectangle</option>
-            <option value="triangle">Triangle</option>
-            <option value="diamond">Diamond</option>
-            <option value="pentagon">Pentagon</option>
-            <option value="hexagon">Hexagon</option>
-            <option value="heptagon">Heptagon</option>
-            <option value="octagon">Octagon</option>
-            <option value="star">Star</option>
-            <option value="vee">Vee</option>
-            <option value="rhomboid">Rhomboid</option>
-          </select>
+        <label for="node-label">Label:</label>
+        <input type="text" id="node-label" value="Node Label">
+
+        <label for="node-shape">Shape:</label>
+        <select id="node-shape">
+          <option value="ellipse">Ellipse</option>
+          <option value="rectangle">Rectangle</option>
+          <option value="roundrectangle">Round Rectangle</option>
+          <option value="triangle">Triangle</option>
+          <option value="diamond">Diamond</option>
+          <option value="pentagon">Pentagon</option>
+          <option value="hexagon">Hexagon</option>
+          <option value="heptagon">Heptagon</option>
+          <option value="octagon">Octagon</option>
+          <option value="star">Star</option>
+          <option value="vee">Vee</option>
+          <option value="rhomboid">Rhomboid</option>
+        </select>
+
+        <label for="node-annotation">Annotation:</label>
+        <textarea id="node-annotation" rows="4">Node Annotation</textarea>
+      </div>
+    </div>
+
+    <!-- Legend -->
+    <div id="legend">
+      <div class="legend-item active">
+        <input type="text" id="graph-title" value="Untitled Graph">
+      </div>
+      <div class="add-graph-btn">
+        <i class="fas fa-plus-circle"></i>&nbsp;Add Graph
+      </div>
+    </div>
+    
+    <div id="bottom-bar">
+      <div id="text-area">Node Annotation</div>
+      <div id="controls-and-branding">
+        <div id="controls">
+          <button class="btn" id="add-node-btn" title="Add Node">
+            <i class="fas fa-plus"></i>
+          </button>
+          <button class="btn" id="delete-element-btn" title="Delete Selected">
+            <i class="fas fa-trash"></i>
+          </button>
+          <button class="btn" id="load-btn" title="Load Graph">
+            <i class="fas fa-upload"></i>
+          </button>
+          <button class="btn" id="download-btn" title="Download Graph">
+            <i class="fas fa-download"></i>
+          </button>
+          <button class="btn" id="reset-btn" title="Reset Graph">
+            <i class="fas fa-redo"></i>
+          </button>
         </div>
-        <div id="edge-properties" style="display: none;">
-          <label for="edge-label">Label:</label>
-          <input type="text" id="edge-label">
-          
-          <!-- Additional edge properties can be added here -->
+        <div id="branding">
+          <a href="https://github.com/yourusername/yourrepo" target="_blank">Possible Futures Editor</a>
         </div>
       </div>
     </div>
@@ -173,7 +224,77 @@
 
   <!-- Inline JavaScript -->
   <script>
-    // Future JavaScript code will go here
+    // This is a mock-up; functionality will be added later
+    // Initialize Cytoscape with a single node
+    const cy = cytoscape({
+      container: document.getElementById('graph-container'),
+      elements: [
+        {
+          data: { id: 'node1', label: 'Node Label', nodeShape: 'ellipse' },
+          position: { x: 100, y: 250 } // Adjusted x and y for left-middle position
+        }
+      ],
+      style: [
+        // Node styles
+        {
+          selector: 'node',
+          style: {
+            'background-color': '#006064',
+            'shape': 'data(nodeShape)',
+            'width': 60, // Changed to number
+            'height': 60, // Changed to number
+            'border-width': 2, // Changed to number
+            'border-color': '#004d40',
+            'color': '#e0e0e0',
+            'font-size': '14px',
+            'text-valign': 'bottom',
+            'text-halign': 'center',
+            'text-margin-y': 4, // Changed to number
+            'content': 'data(label)'
+          }
+        },
+        // Edge styles
+        {
+          selector: 'edge',
+          style: {
+            'width': 3,
+            'line-color': '#004d40',
+            'target-arrow-color': '#004d40',
+            'target-arrow-shape': 'triangle',
+            'curve-style': 'bezier',
+          }
+        },
+        // Selected node styling
+        {
+          selector: 'node:selected',
+          style: {
+            'background-color': '#00ced1',
+            'line-color': '#00ced1',
+            'target-arrow-color': '#00ced1',
+            'source-arrow-color': '#00ced1'
+          }
+        }
+      ],
+      layout: {
+        name: 'preset' // Use positions defined in the nodes
+      }
+    });
+
+    // Enable node dragging
+    cy.nodes().grabify();
+
+    // Pre-select the node
+    const initialNode = cy.getElementById('node1');
+    initialNode.select();
+
+    // Display dummy annotation
+    document.getElementById('text-area').textContent = 'Node Annotation';
+
+    // Set initial zoom and pan
+    cy.zoom(1); // 100% zoom
+    cy.pan({ x: 0, y: 0 }); // Top-left corner at (0,0)
+
+    // Event listeners will be added in future steps
   </script>
 </body>
 </html>
