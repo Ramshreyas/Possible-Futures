@@ -1,0 +1,224 @@
+body {
+  margin: 0;
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+  font-family: Arial, sans-serif;
+}
+#main-container {
+  position: relative;
+  border: 2px solid #3a3a3a;
+  padding: 10px;
+  height: 100vh;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+}
+/* Flex container for graph and properties */
+#graph-and-properties {
+  display: flex;
+  flex: 1;
+  overflow: hidden;
+}
+#graph-container {
+  flex: 1;
+  background-color: #2a2a2a;
+}
+/* Properties Panel */
+#properties-panel {
+  width: 300px;
+  background-color: rgba(50, 50, 50, 0.9);
+  padding: 15px;
+  border-left: 2px solid #3a3a3a;
+  box-sizing: border-box;
+  color: #e0e0e0;
+  display: flex;
+  flex-direction: column;
+}
+/* Split the properties panel */
+#node-properties, #sequence-interface {
+  flex: 1;
+  overflow-y: auto;
+  margin-bottom: 10px;
+}
+#node-properties {
+  border-bottom: 1px solid #3a3a3a;
+  padding-bottom: 10px;
+}
+#properties-panel h2 {
+  margin-top: 0;
+  color: #00ced1;
+}
+#properties-panel label {
+  display: block;
+  margin-top: 10px;
+}
+#properties-panel input, #properties-panel select, #properties-panel textarea {
+  width: 100%;
+  padding: 5px;
+  background-color: #333;
+  border: none;
+  color: #e0e0e0;
+  margin-top: 5px;
+  box-sizing: border-box;
+}
+#properties-panel input:focus, #properties-panel select:focus, #properties-panel textarea:focus {
+  outline: none;
+  border: 1px solid #00ced1;
+}
+/* Sequence Interface Styles */
+#sequence-interface h2 {
+  margin-top: 0;
+  color: #00ced1;
+}
+#sequence-interface .graph-selector {
+  margin-top: 10px;
+  width: 100%;
+  padding: 5px;
+  background-color: #333;
+  border: none;
+  color: #e0e0e0;
+  box-sizing: border-box;
+}
+#sequence-interface .graph-selector:focus {
+  outline: none;
+  border: 1px solid #00ced1;
+}
+#sequence-list {
+  list-style: none;
+  padding: 0;
+  margin-top: 10px;
+  overflow-y: auto;
+  max-height: 150px;
+}
+#sequence-list li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 5px;
+}
+#sequence-list li .node-name {
+  flex: 1;
+}
+#sequence-list li .sequence-btns {
+  display: flex;
+  align-items: center;
+}
+#sequence-list li .sequence-btns button {
+  background-color: transparent;
+  border: none;
+  color: #e0e0e0;
+  cursor: pointer;
+  font-size: 16px;
+  margin-left: 5px;
+}
+#sequence-list li .sequence-btns button:hover {
+  color: #1de9b6;
+}
+/* Bottom Bar */
+#bottom-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+#text-area {
+  color: #e0e0e0;
+  padding: 10px;
+  flex: 1;
+}
+#controls-and-branding {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding: 10px;
+}
+#controls {
+  display: flex;
+  align-items: center;
+}
+.btn {
+  background-color: transparent;
+  border: none;
+  padding: 5px;
+  margin: 5px;
+  cursor: pointer;
+  color: #00ced1;
+  font-size: 24px;
+}
+.btn:hover {
+  color: #1de9b6;
+}
+#branding {
+  font-size: 12px;
+  margin-top: 5px;
+}
+#branding a {
+  color: #a0a0a0;
+  text-decoration: none;
+}
+#branding a:hover {
+  color: #e0e0e0;
+}
+/* Legend styles */
+#legend {
+  position: absolute;
+  top: 10px;
+  right: 320px;
+  background-color: rgba(50, 50, 50, 0.9);
+  padding: 15px;
+  border-radius: 4px;
+  color: #e0e0e0;
+  font-size: 16px;
+}
+#legend .legend-item {
+  cursor: pointer;
+  color: #a0a0a0;
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+}
+#legend .legend-item.active {
+  color: #e0e0e0;
+  font-weight: bold;
+}
+#legend .legend-item input {
+  background-color: transparent;
+  border: none;
+  color: #e0e0e0;
+  font-size: 16px;
+  flex: 1;
+}
+#legend .legend-item input:focus {
+  outline: none;
+  border-bottom: 1px solid #00ced1;
+}
+#legend .add-graph-btn {
+  margin-top: 10px;
+  cursor: pointer;
+  color: #00ced1;
+  display: flex;
+  align-items: center;
+}
+/* Legend Content */
+.legend-content {
+  display: flex;
+  align-items: center;
+}
+/* Legend Eye Icon */
+.legend-eye-icon {
+  margin-left: 8px;
+  cursor: pointer;
+  color: #a0a0a0; /* Dull color for inactive graphs */
+  font-size: 16px;
+}
+
+.legend-eye-icon:hover {
+  color: #1de9b6;
+}
+
+/* Active Eye Icon */
+.legend-item.active .legend-eye-icon {
+  color: #00ced1; /* Brighter color for active graph */
+}
+
+.legend-item.active .legend-eye-icon:hover {
+  color: #1de9b6;
+}
