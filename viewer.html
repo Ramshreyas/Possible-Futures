@@ -239,7 +239,14 @@
           ],
           layout: {
             name: 'preset' // Use positions defined in the nodes
-          }
+          },
+          userZoomingEnabled: true,
+          userPanningEnabled: true,
+          zoomingEnabled: true,
+          panningEnabled: true,
+          minZoom: 0.1,
+          maxZoom: 10,
+          wheelSensitivity: 0.2,
         });
 
       // Build legend
@@ -330,6 +337,9 @@
       updateGraphVisibility();
       updateSelection();
       updateAnnotation();
+      cy.ready(function() {
+        cy.fit();
+      });
     }
   };
   </script>
