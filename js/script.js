@@ -79,6 +79,17 @@ addNodeBtn.addEventListener('click', function() {
     position: newNodePosition
   });
 
+  // **Add this code to create an edge between the selected node and the new node**
+  const newEdgeId = 'edge' + (cy.edges().length + 1);
+  cy.add({
+    group: 'edges',
+    data: {
+      id: newEdgeId,
+      source: selectedNode.id(),
+      target: newNodeId
+    }
+  });
+
   // Enable dragging for the new node
   newNode.grabify();
 
