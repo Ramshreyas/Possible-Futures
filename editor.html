@@ -51,10 +51,10 @@
         <!-- Sequencing Interface -->
         <div id="sequence-interface">
           <h2>Sequence</h2>
-          <!-- Graph Selector -->
-          <select id="graph-selector" class="graph-selector">
-            <!-- Options will be populated dynamically -->
-          </select>
+          <!-- Add to Sequence Button -->
+          <button id="add-to-sequence-btn" class="icon-btn" title="Add to Sequence" disabled>
+            <i class="fas fa-plus"></i>
+          </button>
 
           <!-- Sequence List -->
           <ul id="sequence-list">
@@ -104,6 +104,14 @@
           <a href="https://github.com/yourusername/yourrepo" target="_blank">Possible Futures Editor</a>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Preview Modal -->
+  <div id="preview-modal" class="modal">
+    <div class="modal-content">
+      <span class="close-btn">&times;</span>
+      <iframe id="preview-iframe" src="viewer.html"></iframe>
     </div>
   </div>
 

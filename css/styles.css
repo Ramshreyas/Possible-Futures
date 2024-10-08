@@ -270,3 +270,66 @@ body {
   border-color: #ffeb3b;
   border-width: 4px;
 }
+
+/* Sequence Interface */
+#sequence-interface {
+  margin-top: 20px;
+}
+
+#sequence-interface h2 {
+  display: inline-block;
+  margin-right: 10px;
+}
+
+#add-to-sequence-btn {
+  display: inline-block;
+  background: none;
+  border: none;
+  color: #e0e0e0;
+  font-size: 18px;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+#add-to-sequence-btn:disabled {
+  color: #555;
+  cursor: default;
+}
+
+#sequence-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 10px 0;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+#sequence-list li {
+  display: flex;
+  align-items: center;
+  padding: 5px 10px;
+  background-color: #2a2a2a;
+  color: #e0e0e0;
+  margin-bottom: 5px;
+}
+
+#sequence-list li .sequence-item-label {
+  flex-grow: 1;
+  cursor: pointer;
+}
+
+#sequence-list li .remove-sequence-item-btn {
+  background: none;
+  border: none;
+  color: #e0e0e0;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+#sequence-list li .remove-sequence-item-btn:hover {
+  color: #ff1744;
+}
+
+#sequence-list li.selected {
+  background-color: #00ced1;
+}

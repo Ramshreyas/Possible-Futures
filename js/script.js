@@ -13,6 +13,10 @@ const addGraphBtn = document.createElement('div');
 addGraphBtn.className = 'add-graph-btn';
 addGraphBtn.innerHTML = '<i class="fas fa-plus-circle"></i>&nbsp;Add Graph';
 
+// Sequencing Interface DOM Elements
+const sequenceList = document.getElementById('sequence-list');
+const addToSequenceBtn = document.getElementById('add-to-sequence-btn');
+
 // Variables
 let cy; // Cytoscape instance
 let selectedNode = null;
@@ -21,6 +25,9 @@ let edgeCreationMode = false; // Variable to track edge creation mode
 // Variables to store graphs and the current graph index
 let graphs = [];
 let currentGraphIndex = 0;
+
+// Sequence data
+let sequence = []; // Array to store the sequence of node IDs
 
 // Function to update properties panel
 function updatePropertiesPanel(node) {
@@ -32,6 +39,9 @@ function updatePropertiesPanel(node) {
     nodeShapeSelect.disabled = false;
     nodeAnnotationInput.disabled = false;
     textArea.textContent = node.data('annotation') || '';
+
+    // Enable 'Add to Sequence' button
+    addToSequenceBtn.disabled = false;
   } else {
     nodeLabelInput.value = '';
     nodeShapeSelect.value = 'ellipse';
@@ -40,6 +50,9 @@ function updatePropertiesPanel(node) {
     nodeShapeSelect.disabled = true;
     nodeAnnotationInput.disabled = true;
     textArea.textContent = '';
+
+    // Disable 'Add to Sequence' button
+    addToSequenceBtn.disabled = true;
   }
 }
 
@@ -124,15 +137,36 @@ deleteElementBtn.addEventListener('click', function() {
     cy.remove(selectedNode);
     selectedNode = null;
     updatePropertiesPanel(null);
+
+    // Update the sequence in case the node was part of it
+    sequence = sequence.filter(nodeId => cy.getElementById(nodeId).length > 0);
+    updateSequenceList();
   } else {
     alert('Please select a node to delete.');
   }
+});
+
+// "Add Edge" button functionality
+addEdgeBtn.addEventListener('click', function() {
+  if (!selectedNode) {
+    alert('Please select a node to start creating an edge from.');
+    return;
+  }
+
+  edgeCreationMode = true;
+  // Provide visual feedback to the user
+  graphContainer.style.cursor = 'crosshair';
+  alert('Edge creation mode: Click on another node to create an edge.');
+
+  // Optionally, you can highlight the selected node
+  selectedNode.addClass('edge-source');
 });
 
 // Function to save the current graph's elements
 function saveCurrentGraph() {
   if (cy) {
     graphs[currentGraphIndex].elements = cy.json().elements;
+    graphs[currentGraphIndex].sequence = sequence;
   }
 }
 
@@ -304,6 +338,10 @@ function loadGraph(graphData) {
 
   // Re-initialize event listeners and functionality here
   setupEventListeners();
+
+  // Load the sequence
+  sequence = graphData.sequence || [];
+  updateSequenceList();
 }
 
 // Function to setup event listeners
@@ -326,6 +364,7 @@ function setupEventListeners() {
   cy.on('data', 'node', function(event) {
     const node = event.target;
     node.style('content', node.data('label'));
+    updateSequenceList(); // Update sequence list to reflect label changes
   });
 
   // Handle clicking on nodes for edge creation
@@ -375,20 +414,61 @@ function setupEventListeners() {
   });
 }
 
-// "Add Edge" button functionality
-addEdgeBtn.addEventListener('click', function() {
-  if (!selectedNode) {
-    alert('Please select a node to start creating an edge from.');
-    return;
+// "Add to Sequence" button functionality
+addToSequenceBtn.addEventListener('click', function() {
+  if (selectedNode) {
+    // Add node ID to sequence
+    sequence.push(selectedNode.id());
+    updateSequenceList();
   }
-
-  edgeCreationMode = true;
-  // Provide visual feedback to the user
-  graphContainer.style.cursor = 'crosshair';
-
-  // Optionally, you can highlight the selected node
-  selectedNode.addClass('edge-source');
 });
+
+// Function to update the sequence list
+function updateSequenceList() {
+  // Clear the list
+  sequenceList.innerHTML = '';
+
+  sequence.forEach((nodeId, index) => {
+    const node = cy.getElementById(nodeId);
+    if (node.length === 0) {
+      // Node does not exist, remove it from the sequence
+      sequence.splice(index, 1);
+      return;
+    }
+
+    const listItem = document.createElement('li');
+
+    // Sequence item label
+    const labelSpan = document.createElement('span');
+    labelSpan.className = 'sequence-item-label';
+    labelSpan.textContent = node.data('label') || nodeId;
+
+    // Click event to select the node in the graph
+    labelSpan.addEventListener('click', function() {
+      // Select the corresponding node in the graph
+      cy.nodes().unselect();
+      node.select();
+    });
+
+    // Remove button
+    const removeBtn = document.createElement('button');
+    removeBtn.className = 'remove-sequence-item-btn';
+    removeBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+    removeBtn.title = 'Remove from Sequence';
+
+    // Click event to remove the sequence item
+    removeBtn.addEventListener('click', function() {
+      sequence.splice(index, 1);
+      updateSequenceList();
+    });
+
+    // Append elements to the list item
+    listItem.appendChild(labelSpan);
+    listItem.appendChild(removeBtn);
+
+    sequenceList.appendChild(listItem);
+  });
+}
 
 // Event listener for "Add Graph" button
 addGraphBtn.addEventListener('click', function() {
