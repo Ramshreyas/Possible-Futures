@@ -222,3 +222,51 @@ body {
 .legend-item.active .legend-eye-icon:hover {
   color: #1de9b6;
 }
+
+/* Dropdown container */
+.dropdown {
+  position: relative;
+  display: inline-block;
+}
+
+/* Dropdown menu */
+.dropdown-menu {
+  display: none;
+  position: absolute;
+  background-color: #2a2a2a;
+  min-width: 120px;
+  box-shadow: 0px -8px 16px 0px rgba(0,0,0,0.5); /* Adjusted for upward direction */
+  z-index: 1;
+  right: 0;
+
+  /* Adjusted properties to position the menu above */
+  bottom: 100%; /* Position the dropdown menu above the button */
+}
+
+/* Dropdown items */
+.dropdown-item {
+  color: #e0e0e0;
+  padding: 8px 16px;
+  text-decoration: none;
+  display: block;
+  background: none;
+  border: none;
+  text-align: left;
+  width: 100%;
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #3a3a3a;
+}
+
+/* Show the dropdown menu on hover */
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+/* Highlight selected node during edge creation */
+.edge-source {
+  border-color: #ffeb3b;
+  border-width: 4px;
+}

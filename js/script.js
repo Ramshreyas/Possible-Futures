@@ -5,10 +5,24 @@ const nodeAnnotationInput = document.getElementById('node-annotation');
 const textArea = document.getElementById('text-area');
 const addNodeBtn = document.getElementById('add-node-btn');
 const deleteElementBtn = document.getElementById('delete-element-btn');
+const addEdgeBtn = document.getElementById('add-edge-btn');
 
+const graphContainer = document.getElementById('graph-container');
+const legend = document.getElementById('legend');
+const addGraphBtn = document.createElement('div');
+addGraphBtn.className = 'add-graph-btn';
+addGraphBtn.innerHTML = '<i class="fas fa-plus-circle"></i>&nbsp;Add Graph';
+
+// Variables
+let cy; // Cytoscape instance
 let selectedNode = null;
+let edgeCreationMode = false; // Variable to track edge creation mode
 
-// Update properties panel
+// Variables to store graphs and the current graph index
+let graphs = [];
+let currentGraphIndex = 0;
+
+// Function to update properties panel
 function updatePropertiesPanel(node) {
   if (node) {
     nodeLabelInput.value = node.data('label') || '';
@@ -79,7 +93,7 @@ addNodeBtn.addEventListener('click', function() {
     position: newNodePosition
   });
 
-  // **Add this code to create an edge between the selected node and the new node**
+  // Add an edge between the selected node and the new node
   const newEdgeId = 'edge' + (cy.edges().length + 1);
   cy.add({
     group: 'edges',
@@ -115,24 +129,12 @@ deleteElementBtn.addEventListener('click', function() {
   }
 });
 
-// Variables to store graphs and the current graph index
-let graphs = [];
-let currentGraphIndex = 0;
-
-// **Define saveCurrentGraph before it's called**
 // Function to save the current graph's elements
 function saveCurrentGraph() {
-  if (window.cy) {
+  if (cy) {
     graphs[currentGraphIndex].elements = cy.json().elements;
   }
 }
-
-// DOM Elements
-const graphContainer = document.getElementById('graph-container');
-const legend = document.getElementById('legend');
-const addGraphBtn = document.createElement('div');
-addGraphBtn.className = 'add-graph-btn';
-addGraphBtn.innerHTML = '<i class="fas fa-plus-circle"></i>&nbsp;Add Graph';
 
 // Function to create a new graph
 function createNewGraph(name = 'Untitled Graph') {
@@ -220,12 +222,12 @@ function switchGraph(index) {
 // Function to load a graph into Cytoscape
 function loadGraph(graphData) {
   // Destroy existing Cytoscape instance if any
-  if (window.cy) {
+  if (cy) {
     cy.destroy();
   }
 
   // Initialize Cytoscape with the graph data
-  window.cy = cytoscape({
+  cy = cytoscape({
     container: graphContainer,
     elements: graphData.elements,
     style: [
@@ -266,6 +268,14 @@ function loadGraph(graphData) {
           'line-color': '#00ced1',
           'target-arrow-color': '#00ced1',
           'source-arrow-color': '#00ced1'
+        }
+      },
+      // Edge source styling during edge creation
+      {
+        selector: '.edge-source',
+        style: {
+          'border-color': '#ffeb3b',
+          'border-width': 4,
         }
       }
     ],
@@ -317,21 +327,74 @@ function setupEventListeners() {
     const node = event.target;
     node.style('content', node.data('label'));
   });
+
+  // Handle clicking on nodes for edge creation
+  cy.on('tap', 'node', function(event) {
+    if (edgeCreationMode) {
+      const targetNode = event.target;
+
+      // Prevent creating an edge to the same node
+      if (selectedNode.id() === targetNode.id()) {
+        alert('Cannot create an edge to the same node.');
+        return;
+      }
+
+      // Generate a unique ID for the new edge
+      const newEdgeId = 'edge' + (cy.edges().length + 1);
+
+      // Add the edge to the graph
+      cy.add({
+        group: 'edges',
+        data: {
+          id: newEdgeId,
+          source: selectedNode.id(),
+          target: targetNode.id()
+        }
+      });
+
+      // Exit edge creation mode
+      edgeCreationMode = false;
+      graphContainer.style.cursor = 'default';
+
+      // Remove visual feedback
+      selectedNode.removeClass('edge-source');
+    }
+  });
+
+  // Handle clicking on the background to cancel edge creation
+  cy.on('tap', function(event) {
+    if (edgeCreationMode && event.target === cy) {
+      edgeCreationMode = false;
+      graphContainer.style.cursor = 'default';
+
+      // Remove visual feedback
+      if (selectedNode) {
+        selectedNode.removeClass('edge-source');
+      }
+    }
+  });
 }
+
+// "Add Edge" button functionality
+addEdgeBtn.addEventListener('click', function() {
+  if (!selectedNode) {
+    alert('Please select a node to start creating an edge from.');
+    return;
+  }
+
+  edgeCreationMode = true;
+  // Provide visual feedback to the user
+  graphContainer.style.cursor = 'crosshair';
+
+  // Optionally, you can highlight the selected node
+  selectedNode.addClass('edge-source');
+});
 
 // Event listener for "Add Graph" button
 addGraphBtn.addEventListener('click', function() {
   const newGraphIndex = createNewGraph('Untitled Graph ' + (graphs.length + 1));
   switchGraph(newGraphIndex);
 });
-
-// **Moved saveCurrentGraph before it's called in switchGraph**
-// Function to save the current graph's elements
-function saveCurrentGraph() {
-  if (window.cy) {
-    graphs[currentGraphIndex].elements = cy.json().elements;
-  }
-}
 
 // Initialize the editor with a default graph
 function init() {

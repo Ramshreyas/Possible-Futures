@@ -73,9 +73,16 @@
       <div id="text-area">Node Annotation</div>
       <div id="controls-and-branding">
         <div id="controls">
-          <button class="btn" id="add-node-btn" title="Add Node">
-            <i class="fas fa-plus"></i>
-          </button>
+          <!-- Dropdown Add Button -->
+          <div class="dropdown">
+            <button class="btn dropdown-toggle" id="add-btn" title="Add">
+              <i class="fas fa-plus"></i>
+            </button>
+            <div class="dropdown-menu">
+              <button class="dropdown-item" id="add-node-btn">Add Node</button>
+              <button class="dropdown-item" id="add-edge-btn">Add Edge</button>
+            </div>
+          </div>
           <button class="btn" id="delete-element-btn" title="Delete Selected">
             <i class="fas fa-trash"></i>
           </button>
