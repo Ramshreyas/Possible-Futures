@@ -570,6 +570,67 @@ function init() {
   switchGraph(0); // Switch to the first graph immediately
 }
 
+document.getElementById('download-btn').addEventListener('click', function() {
+  // Save all graphs data
+  saveAllGraphs();
+
+  // Prepare the data to download
+  const dataStr = JSON.stringify(graphs, null, 2);
+  const blob = new Blob([dataStr], { type: "application/json" });
+  const url = URL.createObjectURL(blob);
+
+  // Create a temporary link element and trigger download
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'graphs.json';
+  a.style.display = 'none';
+  document.body.appendChild(a);
+  a.click();
+
+  // Clean up
+  URL.revokeObjectURL(url);
+  document.body.removeChild(a);
+});
+
+document.getElementById('load-btn').addEventListener('click', function() {
+  // Create an input element to select the file
+  const input = document.createElement('input');
+  input.type = 'file';
+  input.accept = '.json';
+
+  input.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) {
+      return;
+    }
+    const reader = new FileReader();
+    reader.onload = e => {
+      try {
+        const contents = e.target.result;
+        const loadedGraphs = JSON.parse(contents);
+        if (Array.isArray(loadedGraphs)) {
+          // Replace the existing graphs with loadedGraphs
+          graphs = loadedGraphs;
+
+          // Reset current graph index and load the first graph
+          currentGraphIndex = 0;
+          loadGraph(graphs[currentGraphIndex]);
+          renderLegend();
+        } else {
+          alert('Invalid file format: Expected an array of graphs.');
+        }
+      } catch (err) {
+        console.error('Error parsing JSON:', err);
+        alert('Error parsing JSON file. Please ensure it is in the correct format.');
+      }
+    };
+    reader.readAsText(file);
+  };
+
+  // Trigger the file selection dialog
+  input.click();
+});
+
 // Call init to set up the editor
 init();
 
