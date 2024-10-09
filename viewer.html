@@ -128,38 +128,57 @@
   <!-- Inline JavaScript -->
   <script>
     window.onload = function() {
-      // Function to get URL parameters
-      function getUrlParameter(name) {
-        const urlParams = new URLSearchParams(window.location.search);
-        return urlParams.get(name);
-      }
+      // Declare variables at the top level
+      let cy;
+      let graphs = [];
+      let currentGraphId;
+      let currentStep = 0;
 
-      // Get the 'data' parameter from the URL
-      const dataUrl = getUrlParameter('data');
-
-      if (!dataUrl) {
-        alert('Error: No data URL specified in the "data" URL parameter.');
+      // Check if graph data is in localStorage
+      const graphDataStr = localStorage.getItem('graphData');
+      if (graphDataStr) {
+        graphs = JSON.parse(graphDataStr);
+        console.log('Loaded graph data from localStorage:', graphs);
+        // Initialize the app with the graphs data
+        initializeApp();
+        // Optionally, clear the data from localStorage
+        localStorage.removeItem('graphData');
       } else {
-        // Fetch the JSON file
-        fetch(dataUrl)
-          .then(response => {
-            if (!response.ok) {
-              throw new Error('Network response was not OK');
-            }
-            return response.json();
-          })
-          .then(jsonData => {
-            initializeApp(jsonData);
-          })
-          .catch(error => {
-            console.error('Error fetching or parsing data:', error);
-            alert('Error fetching or parsing data. See console for details.');
-          });
+        // Proceed with existing code to get 'data' URL parameter
+        // Function to get URL parameters
+        function getUrlParameter(name) {
+          const urlParams = new URLSearchParams(window.location.search);
+          return urlParams.get(name);
+        }
+
+        // Get the 'data' parameter from the URL
+        const dataUrl = getUrlParameter('data');
+
+        if (!dataUrl) {
+          alert('Error: No data URL specified in the "data" URL parameter.');
+        } else {
+          // Fetch the JSON file
+          fetch(dataUrl)
+            .then(response => {
+              if (!response.ok) {
+                throw new Error('Network response was not OK');
+              }
+              return response.json();
+            })
+            .then(jsonData => {
+              graphs = jsonData;
+              initializeApp();
+            })
+            .catch(error => {
+              console.error('Error fetching or parsing data:', error);
+              alert('Error fetching or parsing data. See console for details.');
+            });
+        }
       }
 
-      function initializeApp(graphs) {
-        let currentGraphId = graphs[0]?.id || 'main'; // Default to first graph's ID
-        let currentStep = 0; // Track the current step in the sequence
+      function initializeApp() {
+        currentGraphId = graphs[0]?.id || 'main'; // Default to first graph's ID
+        currentStep = 0; // Track the current step in the sequence
 
         // Combine all graph elements
         const elements = [];
@@ -173,7 +192,7 @@
         });
 
         // Initialize Cytoscape
-        const cy = cytoscape({
+        cy = cytoscape({
           container: document.getElementById('graph-container'),
           elements: elements,
           style: [
@@ -249,32 +268,46 @@
           wheelSensitivity: 0.2,
         });
 
-      // Build legend
-      const legendDiv = document.getElementById('legend');
+        // Build legend
+        const legendDiv = document.getElementById('legend');
 
-      graphs.forEach(graph => {
-        const div = document.createElement('div');
-        div.classList.add('legend-item');
-        div.setAttribute('data-graph', graph.id);
-        div.textContent = graph.name;
-        legendDiv.appendChild(div);
-      });
-
-      // Event listeners for legend items
-      const legendItems = document.querySelectorAll('#legend .legend-item');
-
-      legendItems.forEach(item => {
-        item.addEventListener('click', () => {
-          const graphId = item.getAttribute('data-graph');
-          currentGraphId = graphId;
-          currentStep = 0; // Reset to first step
-          updateGraphVisibility();
-          updateSelection();
-          updateAnnotation();
+        graphs.forEach(graph => {
+          const div = document.createElement('div');
+          div.classList.add('legend-item');
+          div.setAttribute('data-graph', graph.id);
+          div.textContent = graph.name;
+          legendDiv.appendChild(div);
         });
-      });
+
+        // Setup event listeners for legend items
+        setupLegendEvents();
+
+        // Initial call to set graph visibility and legend
+        updateGraphVisibility();
+        updateSelection();
+        updateAnnotation();
+        cy.ready(function() {
+          cy.fit();
+        });
+      }
+
+      function setupLegendEvents() {
+        const legendItems = document.querySelectorAll('#legend .legend-item');
+
+        legendItems.forEach(item => {
+          item.addEventListener('click', () => {
+            const graphId = item.getAttribute('data-graph');
+            currentGraphId = graphId;
+            currentStep = 0; // Reset to first step
+            updateGraphVisibility();
+            updateSelection();
+            updateAnnotation();
+          });
+        });
+      }
 
       function updateLegend() {
+        const legendItems = document.querySelectorAll('#legend .legend-item');
         legendItems.forEach(item => {
           const graphId = item.getAttribute('data-graph');
           if (graphId === currentGraphId) {
@@ -304,15 +337,23 @@
       function updateSelection() {
         cy.$('node').unselect(); // Unselect all nodes
         const currentGraph = graphs.find(g => g.id === currentGraphId);
-        const currentNodeId = currentGraph.sequence[currentStep].nodeId;
-        cy.$(`#${currentNodeId}`).select(); // Select current node
+        const sequenceItem = currentGraph.sequence[currentStep];
+        if (sequenceItem) {
+          const currentNodeId = sequenceItem.nodeId;
+          cy.$(`#${currentNodeId}`).select(); // Select current node
+        }
       }
 
       function updateAnnotation() {
         const textArea = document.getElementById('text-area');
         const currentGraph = graphs.find(g => g.id === currentGraphId);
-        const annotation = currentGraph.sequence[currentStep].annotation;
-        textArea.textContent = annotation;
+        const sequenceItem = currentGraph.sequence[currentStep];
+        if (sequenceItem) {
+          const annotation = sequenceItem.annotation;
+          textArea.textContent = annotation;
+        } else {
+          textArea.textContent = '';
+        }
       }
 
       // Event listeners for navigation buttons
@@ -332,16 +373,7 @@
           updateAnnotation();
         }
       });
-
-      // Initial call to set graph visibility and legend
-      updateGraphVisibility();
-      updateSelection();
-      updateAnnotation();
-      cy.ready(function() {
-        cy.fit();
-      });
-    }
-  };
+    };
   </script>
 </body>
 </html>

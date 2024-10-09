@@ -6,10 +6,12 @@ const textArea = document.getElementById('text-area');
 const addNodeBtn = document.getElementById('add-node-btn');
 const deleteElementBtn = document.getElementById('delete-element-btn');
 const addEdgeBtn = document.getElementById('add-edge-btn');
+const previewBtn = document.getElementById('preview-btn');
 
 const graphContainer = document.getElementById('graph-container');
 const legend = document.getElementById('legend');
 const addGraphBtn = document.createElement('div');
+
 addGraphBtn.className = 'add-graph-btn';
 addGraphBtn.innerHTML = '<i class="fas fa-plus-circle"></i>&nbsp;Add Graph';
 
@@ -27,7 +29,7 @@ let graphs = [];
 let currentGraphIndex = 0;
 
 // Sequence data
-let sequence = []; // Array to store the sequence of node IDs
+let sequence = []; // Array to store sequence items as { nodeId, annotation }
 
 // Function to update properties panel
 function updatePropertiesPanel(node) {
@@ -74,6 +76,13 @@ nodeAnnotationInput.addEventListener('input', function() {
   if (selectedNode) {
     selectedNode.data('annotation', nodeAnnotationInput.value);
     textArea.textContent = nodeAnnotationInput.value;
+
+    // Update the annotation in the sequence if the node is in it
+    sequence.forEach(seqItem => {
+      if (seqItem.nodeId === selectedNode.id()) {
+        seqItem.annotation = nodeAnnotationInput.value;
+      }
+    });
   }
 });
 
@@ -162,11 +171,71 @@ addEdgeBtn.addEventListener('click', function() {
   selectedNode.addClass('edge-source');
 });
 
+previewBtn.addEventListener('click', function() {
+  // Save all graphs data
+  saveAllGraphs();
+
+  // Prepare the data to send to the viewer
+  const transformedGraphs = graphs.map((graph, index) => {
+    // Ensure that nodes and edges arrays exist
+    const nodesArray = graph.elements.nodes || [];
+    const edgesArray = graph.elements.edges || [];
+
+    const graphId = graph.id || `graph${index}`;
+
+    // Transform nodes
+    const nodes = nodesArray.map(node => {
+      const newNode = {
+        data: { ...node.data },
+        position: node.position
+      };
+      // Prefix node ID
+      newNode.data.id = `${graphId}_${node.data.id}`;
+      // Adjust edges that connect to this node
+      // (Handled in edge transformation)
+      return newNode;
+    });
+
+    // Transform edges
+    const edges = edgesArray.map(edge => {
+      const newEdge = {
+        data: { ...edge.data }
+      };
+      // Prefix edge ID
+      newEdge.data.id = `${graphId}_${edge.data.id}`;
+      // Update source and target IDs to match prefixed node IDs
+      newEdge.data.source = `${graphId}_${edge.data.source}`;
+      newEdge.data.target = `${graphId}_${edge.data.target}`;
+      return newEdge;
+    });
+
+    // Transform sequence
+    const sequence = graph.sequence ? graph.sequence.map(seqItem => ({
+      nodeId: `${graphId}_${seqItem.nodeId}`,
+      annotation: seqItem.annotation
+    })) : [];
+
+    return {
+      id: graphId,
+      name: graph.name,
+      nodes: nodes,
+      edges: edges,
+      sequence: sequence
+    };
+  });
+
+  // Use localStorage to pass data to the viewer
+  localStorage.setItem('graphData', JSON.stringify(transformedGraphs));
+
+  // Open viewer.html in a new tab
+  window.open('viewer.html', '_blank');
+});
+
 // Function to save the current graph's elements
 function saveCurrentGraph() {
   if (cy) {
     graphs[currentGraphIndex].elements = cy.json().elements;
-    graphs[currentGraphIndex].sequence = sequence;
+    graphs[currentGraphIndex].sequence = sequence.slice(); // Use slice() to copy the sequence array
   }
 }
 
@@ -192,6 +261,22 @@ function createNewGraph(name = 'Untitled Graph') {
 
   graphs.push(graphData);
   return graphs.length - 1; // Return the index of the new graph
+}
+
+function saveAllGraphs() {
+  const originalGraphIndex = currentGraphIndex;
+
+  // Loop over all graphs
+  for (let i = 0; i < graphs.length; i++) {
+    // Switch to the graph
+    switchGraph(i);
+
+    // Save the graph
+    saveCurrentGraph();
+  }
+
+  // After saving all graphs, reload the original graph
+  switchGraph(originalGraphIndex);
 }
 
 // Function to render the legend
@@ -340,7 +425,7 @@ function loadGraph(graphData) {
   setupEventListeners();
 
   // Load the sequence
-  sequence = graphData.sequence || [];
+  sequence = graphData.sequence ? graphData.sequence.slice() : [];
   updateSequenceList();
 }
 
@@ -417,18 +502,20 @@ function setupEventListeners() {
 // "Add to Sequence" button functionality
 addToSequenceBtn.addEventListener('click', function() {
   if (selectedNode) {
-    // Add node ID to sequence
-    sequence.push(selectedNode.id());
+    // Add node ID and annotation to sequence
+    const nodeId = selectedNode.id();
+    const annotation = selectedNode.data('annotation') || '';
+    sequence.push({ nodeId, annotation });
     updateSequenceList();
   }
 });
 
-// Function to update the sequence list
 function updateSequenceList() {
   // Clear the list
   sequenceList.innerHTML = '';
 
-  sequence.forEach((nodeId, index) => {
+  sequence.forEach((seqItem, index) => {
+    const nodeId = seqItem.nodeId;
     const node = cy.getElementById(nodeId);
     if (node.length === 0) {
       // Node does not exist, remove it from the sequence
