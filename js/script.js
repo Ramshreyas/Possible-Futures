@@ -631,6 +631,15 @@ document.getElementById('load-btn').addEventListener('click', function() {
   input.click();
 });
 
+// Reset button functionality
+document.getElementById('reset-btn').addEventListener('click', function() {
+  // Optional: Add a confirmation dialog to prevent accidental resets
+  if (confirm('Are you sure you want to reset the editor? All unsaved changes will be lost.')) {
+    location.reload();
+  }
+});
+
+
 // Call init to set up the editor
 init();
 
