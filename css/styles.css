@@ -333,3 +333,13 @@ body {
 #sequence-list li.selected {
   background-color: #00ced1;
 }
+
+.legend-copy-icon {
+  cursor: pointer;
+  margin-left: 5px;
+  color: #a0a0a0;
+}
+
+.legend-copy-icon:hover {
+  color: #e0e0e0;
+}

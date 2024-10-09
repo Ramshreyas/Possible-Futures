@@ -287,7 +287,7 @@ function renderLegend() {
     legendItem.className = 'legend-item' + (index === currentGraphIndex ? ' active' : '');
     legendItem.dataset.index = index;
 
-    // Create a container for the input and icon
+    // Create a container for the input and icons
     const legendContent = document.createElement('div');
     legendContent.className = 'legend-content';
 
@@ -316,9 +316,21 @@ function renderLegend() {
       switchGraph(index);
     });
 
-    // Append the input and eye icon to the legend content container
+    // Create the copy icon for duplicating graphs
+    const copyIcon = document.createElement('i');
+    copyIcon.className = 'fas fa-copy legend-copy-icon';
+    copyIcon.title = 'Duplicate this graph';
+
+    // Add click event listener to the copy icon
+    copyIcon.addEventListener('click', function(event) {
+      event.stopPropagation(); // Prevent triggering other click events
+      duplicateGraph(index);
+    });
+
+    // Append the input, eye icon, and copy icon to the legend content container
     legendContent.appendChild(input);
     legendContent.appendChild(eyeIcon);
+    legendContent.appendChild(copyIcon);
 
     // Append the legend content to the legend item
     legendItem.appendChild(legendContent);
@@ -427,6 +439,59 @@ function loadGraph(graphData) {
   // Load the sequence
   sequence = graphData.sequence ? graphData.sequence.slice() : [];
   updateSequenceList();
+}
+
+function duplicateGraph(index) {
+  // Save the current graph before duplicating
+  saveCurrentGraph();
+
+  // Get the graph to duplicate
+  const graphToDuplicate = graphs[index];
+
+  // Create a deep copy of the graph data
+  const duplicatedGraph = JSON.parse(JSON.stringify(graphToDuplicate));
+
+  // Assign a new unique ID to the duplicated graph
+  const newGraphId = 'graph' + graphs.length;
+
+  // Update the graph's ID and name
+  duplicatedGraph.id = newGraphId;
+  duplicatedGraph.name = graphToDuplicate.name + ' Copy';
+
+  // Create a mapping of old IDs to new IDs
+  const idMap = {};
+
+  // Update node IDs
+  duplicatedGraph.elements.nodes.forEach(node => {
+    const oldId = node.data.id;
+    const newId = newGraphId + '_' + oldId;
+    idMap[oldId] = newId;
+    node.data.id = newId;
+  });
+
+  // Update edge IDs and source/target references
+  duplicatedGraph.elements.edges.forEach(edge => {
+    const oldId = edge.data.id;
+    const newId = newGraphId + '_' + oldId;
+    edge.data.id = newId;
+    edge.data.source = idMap[edge.data.source];
+    edge.data.target = idMap[edge.data.target];
+  });
+
+  // Update sequence node IDs
+  duplicatedGraph.sequence = duplicatedGraph.sequence.map(seqItem => ({
+    nodeId: idMap[seqItem.nodeId],
+    annotation: seqItem.annotation
+  }));
+
+  // Add the duplicated graph to the graphs array
+  graphs.push(duplicatedGraph);
+
+  // Update the legend
+  renderLegend();
+
+  // Switch to the new duplicated graph
+  switchGraph(graphs.length - 1);
 }
 
 // Function to setup event listeners
