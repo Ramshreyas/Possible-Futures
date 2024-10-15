@@ -184,11 +184,16 @@
         const elements = [];
 
         graphs.forEach(graph => {
-          const graphClass = graph.id; // Use graph ID as class
+          const graphClass = graph.id || 'main';
+
+          // Determine where nodes and edges are located
+          const nodesArray = graph.nodes || (graph.elements && graph.elements.nodes) || [];
+          const edgesArray = graph.edges || (graph.elements && graph.elements.edges) || [];
+
           // Add nodes
-          elements.push(...graph.nodes.map(node => ({ ...node, classes: graphClass })));
+          elements.push(...nodesArray.map(node => ({ ...node, classes: graphClass })));
           // Add edges
-          elements.push(...graph.edges.map(edge => ({ ...edge, classes: graphClass })));
+          elements.push(...edgesArray.map(edge => ({ ...edge, classes: graphClass })));
         });
 
         // Initialize Cytoscape

@@ -640,7 +640,27 @@ document.getElementById('download-btn').addEventListener('click', function() {
   saveAllGraphs();
 
   // Prepare the data to download
-  const dataStr = JSON.stringify(graphs, null, 2);
+  const transformedGraphs = graphs.map((graph, index) => {
+    const nodesArray = graph.elements.nodes || [];
+    const edgesArray = graph.elements.edges || [];
+
+    const graphId = graph.id || `graph${index}`;
+
+    return {
+      id: graphId, // Ensure the graph has an 'id'
+      name: graph.name,
+      nodes: nodesArray.map(node => ({
+        data: node.data,
+        position: node.position
+      })),
+      edges: edgesArray.map(edge => ({
+        data: edge.data
+      })),
+      sequence: graph.sequence ? graph.sequence.slice() : []
+    };
+  });
+
+  const dataStr = JSON.stringify(transformedGraphs, null, 2);
   const blob = new Blob([dataStr], { type: "application/json" });
   const url = URL.createObjectURL(blob);
 
