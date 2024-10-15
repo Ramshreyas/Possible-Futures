@@ -1,485 +1,485 @@
 [
-  {
-    "id": "graph0",
-    "name": "Current Paradigm (PBS)",
-    "nodes": [
-      {
-        "data": {
-          "id": "node1",
-          "label": "Builder",
-          "nodeShape": "ellipse",
+    {
+      "id": "graph0",
+      "name": "Current Paradigm (PBS)",
+      "nodes": [
+        {
+          "data": {
+            "id": "graph0_node1",
+            "label": "Builder",
+            "nodeShape": "ellipse",
+            "annotation": "Builders collect transactions from the public mempool and private orderflow to construct blocks  "
+          },
+          "position": {
+            "x": 91.45831891747379,
+            "y": 248.68589521807291
+          }
+        },
+        {
+          "data": {
+            "id": "graph0_node2",
+            "label": "Relay",
+            "nodeShape": "rectangle",
+            "annotation": "Builders submit blinded versions of their blocks (containing only block headers and bid values) to relays"
+          },
+          "position": {
+            "x": 257.1635580138292,
+            "y": 250
+          }
+        },
+        {
+          "data": {
+            "id": "graph0_node3",
+            "label": "Proposer",
+            "nodeShape": "diamond",
+            "annotation": "Proposers query the relay(s) for the best bid, and return a SignedExecutionPayloadHeader upon selection"
+          },
+          "position": {
+            "x": 430.1220499216174,
+            "y": 356.53534844997495
+          }
+        },
+        {
+          "data": {
+            "id": "graph0_node4",
+            "label": "Relay",
+            "nodeShape": "rectangle",
+            "annotation": "The relay requests the full block from the builder"
+          },
+          "position": {
+            "x": 258.708405412631,
+            "y": 444.5705239096356
+          }
+        },
+        {
+          "data": {
+            "id": "graph0_node5",
+            "label": "Builder",
+            "nodeShape": "ellipse",
+            "annotation": "The builder forwards the block to the relay"
+          },
+          "position": {
+            "x": 99.16989064638041,
+            "y": 514.1924008409385
+          }
+        },
+        {
+          "data": {
+            "id": "graph0_node6",
+            "label": "Relay",
+            "nodeShape": "rectangle",
+            "annotation": "The relay forwards the full block to the proposer (and broadcasts it itself as it has the signed header)"
+          },
+          "position": {
+            "x": 261.73724823974027,
+            "y": 607.5993667367447
+          }
+        },
+        {
+          "data": {
+            "id": "graph0_node7",
+            "label": "Proposer",
+            "nodeShape": "diamond",
+            "annotation": "The proposer broadcasts it to the network for validation and inclusion in the blockchain"
+          },
+          "position": {
+            "x": 450.2405875463304,
+            "y": 611.2275763005991
+          }
+        },
+        {
+          "data": {
+            "id": "graph0_node8",
+            "label": "Network",
+            "nodeShape": "heptagon",
+            "annotation": "The block is validated for addition to the canonical chain"
+          },
+          "position": {
+            "x": 608.8596441419865,
+            "y": 608.8459409349975
+          }
+        },
+        {
+          "data": {
+            "id": "graph0_node10",
+            "label": "Public Mempool",
+            "nodeShape": "ellipse",
+            "annotation": "New node annotation"
+          },
+          "position": {
+            "x": -64.79211355831215,
+            "y": 165.89729395666512
+          }
+        },
+        {
+          "data": {
+            "id": "graph0_node11",
+            "label": "Private Orderflow",
+            "nodeShape": "ellipse",
+            "annotation": "New node annotation"
+          },
+          "position": {
+            "x": -68.07737551312994,
+            "y": 296.65071975841227
+          }
+        }
+      ],
+      "edges": [
+        {
+          "data": {
+            "id": "graph0_edge1",
+            "source": "graph0_node1",
+            "target": "graph0_node2"
+          }
+        },
+        {
+          "data": {
+            "id": "graph0_edge2",
+            "source": "graph0_node2",
+            "target": "graph0_node3"
+          }
+        },
+        {
+          "data": {
+            "id": "graph0_edge3",
+            "source": "graph0_node3",
+            "target": "graph0_node4"
+          }
+        },
+        {
+          "data": {
+            "id": "graph0_edge4",
+            "source": "graph0_node4",
+            "target": "graph0_node5"
+          }
+        },
+        {
+          "data": {
+            "id": "graph0_edge5",
+            "source": "graph0_node5",
+            "target": "graph0_node6"
+          }
+        },
+        {
+          "data": {
+            "id": "graph0_edge6",
+            "source": "graph0_node6",
+            "target": "graph0_node7"
+          }
+        },
+        {
+          "data": {
+            "id": "graph0_edge7",
+            "source": "graph0_node7",
+            "target": "graph0_node8"
+          }
+        },
+        {
+          "data": {
+            "id": "graph0_edge13",
+            "source": "graph0_node3",
+            "target": "graph0_node2"
+          }
+        },
+        {
+          "data": {
+            "id": "graph0_edge14",
+            "source": "graph0_node4",
+            "target": "graph0_node3"
+          }
+        },
+        {
+          "data": {
+            "id": "graph0_edge9",
+            "source": "graph0_node1",
+            "target": "graph0_node10"
+          }
+        },
+        {
+          "data": {
+            "id": "graph0_edge10",
+            "source": "graph0_node1",
+            "target": "graph0_node11"
+          }
+        },
+        {
+          "data": {
+            "id": "graph0_edge11",
+            "source": "graph0_node11",
+            "target": "graph0_node1"
+          }
+        },
+        {
+          "data": {
+            "id": "graph0_edge12",
+            "source": "graph0_node10",
+            "target": "graph0_node1"
+          }
+        }
+      ],
+      "sequence": [
+        {
+          "nodeId": "graph0_node1",
           "annotation": "Builders collect transactions from the public mempool and private orderflow to construct blocks  "
         },
-        "position": {
-          "x": 91.45831891747379,
-          "y": 248.68589521807291
-        }
-      },
-      {
-        "data": {
-          "id": "node2",
-          "label": "Relay",
-          "nodeShape": "rectangle",
+        {
+          "nodeId": "graph0_node2",
           "annotation": "Builders submit blinded versions of their blocks (containing only block headers and bid values) to relays"
         },
-        "position": {
-          "x": 257.1635580138292,
-          "y": 250
-        }
-      },
-      {
-        "data": {
-          "id": "node3",
-          "label": "Proposer",
-          "nodeShape": "diamond",
+        {
+          "nodeId": "graph0_node3",
           "annotation": "Proposers query the relay(s) for the best bid, and return a SignedExecutionPayloadHeader upon selection"
         },
-        "position": {
-          "x": 430.1220499216174,
-          "y": 356.53534844997495
-        }
-      },
-      {
-        "data": {
-          "id": "node4",
-          "label": "Relay",
-          "nodeShape": "rectangle",
+        {
+          "nodeId": "graph0_node4",
           "annotation": "The relay requests the full block from the builder"
         },
-        "position": {
-          "x": 258.708405412631,
-          "y": 444.5705239096356
-        }
-      },
-      {
-        "data": {
-          "id": "node5",
-          "label": "Builder",
-          "nodeShape": "ellipse",
+        {
+          "nodeId": "graph0_node5",
           "annotation": "The builder forwards the block to the relay"
         },
-        "position": {
-          "x": 99.16989064638041,
-          "y": 514.1924008409385
-        }
-      },
-      {
-        "data": {
-          "id": "node6",
-          "label": "Relay",
-          "nodeShape": "rectangle",
+        {
+          "nodeId": "graph0_node6",
           "annotation": "The relay forwards the full block to the proposer (and broadcasts it itself as it has the signed header)"
         },
-        "position": {
-          "x": 261.73724823974027,
-          "y": 607.5993667367447
-        }
-      },
-      {
-        "data": {
-          "id": "node7",
-          "label": "Proposer",
-          "nodeShape": "diamond",
+        {
+          "nodeId": "graph0_node7",
           "annotation": "The proposer broadcasts it to the network for validation and inclusion in the blockchain"
         },
-        "position": {
-          "x": 450.2405875463304,
-          "y": 611.2275763005991
-        }
-      },
-      {
-        "data": {
-          "id": "node8",
-          "label": "Network",
-          "nodeShape": "heptagon",
+        {
+          "nodeId": "graph0_node8",
           "annotation": "The block is validated for addition to the canonical chain"
+        }
+      ]
+    },
+    {
+      "id": "graph1",
+      "name": "ePBS",
+      "nodes": [
+        {
+          "data": {
+            "id": "graph1_graph1_node1",
+            "label": "Builder",
+            "nodeShape": "ellipse",
+            "annotation": "Builders submit their bids directly to proposers or broadcast them on a P2P network"
+          },
+          "position": {
+            "x": 91.45831891747379,
+            "y": 248.68589521807291
+          }
         },
-        "position": {
-          "x": 638.8596441419865,
-          "y": 610.8459409349975
-        }
-      },
-      {
-        "data": {
-          "id": "node10",
-          "label": "Public Mempool",
-          "nodeShape": "ellipse",
-          "annotation": "New node annotation"
+        {
+          "data": {
+            "id": "graph1_graph1_node11",
+            "label": "Private Orderflow",
+            "nodeShape": "ellipse",
+            "annotation": "New node annotation"
+          },
+          "position": {
+            "x": -68.07737551312994,
+            "y": 296.65071975841227
+          }
         },
-        "position": {
-          "x": -64.79211355831215,
-          "y": 165.89729395666512
-        }
-      },
-      {
-        "data": {
-          "id": "node11",
-          "label": "Private Orderflow",
-          "nodeShape": "ellipse",
-          "annotation": "New node annotation"
+        {
+          "data": {
+            "id": "graph1_graph1_node10",
+            "label": "Public Mempool",
+            "nodeShape": "ellipse",
+            "annotation": "New node annotation"
+          },
+          "position": {
+            "x": -64.79211355831215,
+            "y": 165.89729395666512
+          }
         },
-        "position": {
-          "x": -68.07737551312994,
-          "y": 296.65071975841227
-        }
-      }
-    ],
-    "edges": [
-      {
-        "data": {
-          "id": "edge1",
-          "source": "node1",
-          "target": "node2"
-        }
-      },
-      {
-        "data": {
-          "id": "edge2",
-          "source": "node2",
-          "target": "node3"
-        }
-      },
-      {
-        "data": {
-          "id": "edge3",
-          "source": "node3",
-          "target": "node4"
-        }
-      },
-      {
-        "data": {
-          "id": "edge4",
-          "source": "node4",
-          "target": "node5"
-        }
-      },
-      {
-        "data": {
-          "id": "edge5",
-          "source": "node5",
-          "target": "node6"
-        }
-      },
-      {
-        "data": {
-          "id": "edge6",
-          "source": "node6",
-          "target": "node7"
-        }
-      },
-      {
-        "data": {
-          "id": "edge7",
-          "source": "node7",
-          "target": "node8"
-        }
-      },
-      {
-        "data": {
-          "id": "edge13",
-          "source": "node3",
-          "target": "node2"
-        }
-      },
-      {
-        "data": {
-          "id": "edge14",
-          "source": "node4",
-          "target": "node3"
-        }
-      },
-      {
-        "data": {
-          "id": "edge9",
-          "source": "node1",
-          "target": "node10"
-        }
-      },
-      {
-        "data": {
-          "id": "edge10",
-          "source": "node1",
-          "target": "node11"
-        }
-      },
-      {
-        "data": {
-          "id": "edge11",
-          "source": "node11",
-          "target": "node1"
-        }
-      },
-      {
-        "data": {
-          "id": "edge12",
-          "source": "node10",
-          "target": "node1"
-        }
-      }
-    ],
-    "sequence": [
-      {
-        "nodeId": "node1",
-        "annotation": "Builders collect transactions from the public mempool and private orderflow to construct blocks  "
-      },
-      {
-        "nodeId": "node2",
-        "annotation": "Builders submit blinded versions of their blocks (containing only block headers and bid values) to relays"
-      },
-      {
-        "nodeId": "node3",
-        "annotation": "Proposers query the relay(s) for the best bid, and return a SignedExecutionPayloadHeader upon selection"
-      },
-      {
-        "nodeId": "node4",
-        "annotation": "The relay requests the full block from the builder"
-      },
-      {
-        "nodeId": "node5",
-        "annotation": "The builder forwards the block to the relay"
-      },
-      {
-        "nodeId": "node6",
-        "annotation": "The relay forwards the full block to the proposer (and broadcasts it itself as it has the signed header)"
-      },
-      {
-        "nodeId": "node7",
-        "annotation": "The proposer broadcasts it to the network for validation and inclusion in the blockchain"
-      },
-      {
-        "nodeId": "node8",
-        "annotation": "The block is validated for addition to the canonical chain"
-      }
-    ]
-  },
-  {
-    "id": "graph1",
-    "name": "ePBS",
-    "nodes": [
-      {
-        "data": {
-          "id": "graph1_node1",
-          "label": "Builder",
-          "nodeShape": "ellipse",
-          "annotation": "Builders submit their bids directly to proposers or broadcast them on a P2P network"
+        {
+          "data": {
+            "id": "graph1_node4",
+            "label": "Proposer",
+            "nodeShape": "diamond",
+            "annotation": "Proposers collect bids, choose the highest and incorporate the SignedExecutionPayloadHeader into their beacon block"
+          },
+          "position": {
+            "x": 432.4583189174738,
+            "y": 357.6858952180729
+          }
         },
-        "position": {
-          "x": 91.45831891747379,
-          "y": 248.68589521807291
-        }
-      },
-      {
-        "data": {
-          "id": "graph1_node11",
-          "label": "Private Orderflow",
-          "nodeShape": "ellipse",
-          "annotation": "New node annotation"
+        {
+          "data": {
+            "id": "graph1_node5",
+            "label": "Beacon Chain",
+            "nodeShape": "heptagon",
+            "annotation": "Builders have to stake on the beacon chain to participate"
+          },
+          "position": {
+            "x": 623.4583189174738,
+            "y": 250.68589521807291
+          }
         },
-        "position": {
-          "x": -68.07737551312994,
-          "y": 296.65071975841227
-        }
-      },
-      {
-        "data": {
-          "id": "graph1_node10",
-          "label": "Public Mempool",
-          "nodeShape": "ellipse",
-          "annotation": "New node annotation"
+        {
+          "data": {
+            "id": "graph1_node6",
+            "label": "Beacon Chain",
+            "nodeShape": "heptagon",
+            "annotation": "The proposer broadcasts the signed beacon block, and the builder's staked ETH is reduced to pay the proposer"
+          },
+          "position": {
+            "x": 624.4583189174738,
+            "y": 500.6858952180729
+          }
         },
-        "position": {
-          "x": -64.79211355831215,
-          "y": 165.89729395666512
-        }
-      },
-      {
-        "data": {
-          "id": "node4",
-          "label": "Proposer",
-          "nodeShape": "diamond",
-          "annotation": "Proposers collect bids, choose the highest and incorporate the SignedExecutionPayloadHeader into their beacon block"
+        {
+          "data": {
+            "id": "graph1_node7",
+            "label": "Builder",
+            "nodeShape": "ellipse",
+            "annotation": "Upon seeing their header included in a valid beacon block, the builder reveals their full ExecutionPayloadEnvelope, containing the transactions and data for the block"
+          },
+          "position": {
+            "x": 100.45831891747378,
+            "y": 511.6858952180729
+          }
         },
-        "position": {
-          "x": 432.4583189174738,
-          "y": 357.6858952180729
+        {
+          "data": {
+            "id": "graph1_node8",
+            "label": "Payload Timeliness Committee",
+            "nodeShape": "diamond",
+            "annotation": "A dedicated committee attests to the timely presence of the builder's payload"
+          },
+          "position": {
+            "x": 441.4583189174738,
+            "y": 659.6858952180729
+          }
+        },
+        {
+          "data": {
+            "id": "graph1_node9",
+            "label": "Canonical Chain",
+            "nodeShape": "heptagon",
+            "annotation": "Validators validate the received payload against the committed header in the beacon block. If it's valid and timely, as attested by the PTC, it's likely included in the canonical chain"
+          },
+          "position": {
+            "x": 625.4583189174738,
+            "y": 656.6858952180729
+          }
         }
-      },
-      {
-        "data": {
-          "id": "node5",
-          "label": "Beacon Chain",
-          "nodeShape": "heptagon",
+      ],
+      "edges": [
+        {
+          "data": {
+            "id": "graph1_graph1_edge11",
+            "source": "graph1_graph1_node11",
+            "target": "graph1_graph1_node1"
+          }
+        },
+        {
+          "data": {
+            "id": "graph1_graph1_edge12",
+            "source": "graph1_graph1_node10",
+            "target": "graph1_graph1_node1"
+          }
+        },
+        {
+          "data": {
+            "id": "graph1_graph1_edge10",
+            "source": "graph1_graph1_node1",
+            "target": "graph1_graph1_node11"
+          }
+        },
+        {
+          "data": {
+            "id": "graph1_graph1_edge9",
+            "source": "graph1_graph1_node1",
+            "target": "graph1_graph1_node10"
+          }
+        },
+        {
+          "data": {
+            "id": "graph1_edge5",
+            "source": "graph1_graph1_node1",
+            "target": "graph1_node4"
+          }
+        },
+        {
+          "data": {
+            "id": "graph1_edge6",
+            "source": "graph1_graph1_node1",
+            "target": "graph1_node5"
+          }
+        },
+        {
+          "data": {
+            "id": "graph1_edge7",
+            "source": "graph1_node4",
+            "target": "graph1_node6"
+          }
+        },
+        {
+          "data": {
+            "id": "graph1_edge8",
+            "source": "graph1_node4",
+            "target": "graph1_node7"
+          }
+        },
+        {
+          "data": {
+            "id": "graph1_edge9",
+            "source": "graph1_node7",
+            "target": "graph1_node6"
+          }
+        },
+        {
+          "data": {
+            "id": "graph1_edge10",
+            "source": "graph1_node6",
+            "target": "graph1_node7"
+          }
+        },
+        {
+          "data": {
+            "id": "graph1_edge11",
+            "source": "graph1_node7",
+            "target": "graph1_node8"
+          }
+        },
+        {
+          "data": {
+            "id": "graph1_edge12",
+            "source": "graph1_node8",
+            "target": "graph1_node9"
+          }
+        }
+      ],
+      "sequence": [
+        {
+          "nodeId": "graph1_node5",
           "annotation": "Builders have to stake on the beacon chain to participate"
         },
-        "position": {
-          "x": 591.4583189174738,
-          "y": 262.6858952180729
-        }
-      },
-      {
-        "data": {
-          "id": "node6",
-          "label": "Beacon Chain",
-          "nodeShape": "heptagon",
+        {
+          "nodeId": "graph1_graph1_node1",
+          "annotation": "Builders submit their bids directly to proposers or broadcast them on a P2P network"
+        },
+        {
+          "nodeId": "graph1_node4",
+          "annotation": "Proposers collect bids, choose the highest and incorporate the SignedExecutionPayloadHeader into their beacon block"
+        },
+        {
+          "nodeId": "graph1_node6",
           "annotation": "The proposer broadcasts the signed beacon block, and the builder's staked ETH is reduced to pay the proposer"
         },
-        "position": {
-          "x": 596.4583189174738,
-          "y": 504.6858952180729
-        }
-      },
-      {
-        "data": {
-          "id": "node7",
-          "label": "Builder",
-          "nodeShape": "ellipse",
+        {
+          "nodeId": "graph1_node7",
           "annotation": "Upon seeing their header included in a valid beacon block, the builder reveals their full ExecutionPayloadEnvelope, containing the transactions and data for the block"
         },
-        "position": {
-          "x": 100.45831891747378,
-          "y": 511.6858952180729
-        }
-      },
-      {
-        "data": {
-          "id": "node8",
-          "label": "Payload Timeliness Committee",
-          "nodeShape": "diamond",
+        {
+          "nodeId": "graph1_node8",
           "annotation": "A dedicated committee attests to the timely presence of the builder's payload"
         },
-        "position": {
-          "x": 441.4583189174738,
-          "y": 659.6858952180729
-        }
-      },
-      {
-        "data": {
-          "id": "node9",
-          "label": "Canonical Chain",
-          "nodeShape": "heptagon",
+        {
+          "nodeId": "graph1_node9",
           "annotation": "Validators validate the received payload against the committed header in the beacon block. If it's valid and timely, as attested by the PTC, it's likely included in the canonical chain"
-        },
-        "position": {
-          "x": 598.4583189174738,
-          "y": 659.6858952180729
         }
-      }
-    ],
-    "edges": [
-      {
-        "data": {
-          "id": "graph1_edge11",
-          "source": "graph1_node11",
-          "target": "graph1_node1"
-        }
-      },
-      {
-        "data": {
-          "id": "graph1_edge12",
-          "source": "graph1_node10",
-          "target": "graph1_node1"
-        }
-      },
-      {
-        "data": {
-          "id": "graph1_edge10",
-          "source": "graph1_node1",
-          "target": "graph1_node11"
-        }
-      },
-      {
-        "data": {
-          "id": "graph1_edge9",
-          "source": "graph1_node1",
-          "target": "graph1_node10"
-        }
-      },
-      {
-        "data": {
-          "id": "edge5",
-          "source": "graph1_node1",
-          "target": "node4"
-        }
-      },
-      {
-        "data": {
-          "id": "edge6",
-          "source": "graph1_node1",
-          "target": "node5"
-        }
-      },
-      {
-        "data": {
-          "id": "edge7",
-          "source": "node4",
-          "target": "node6"
-        }
-      },
-      {
-        "data": {
-          "id": "edge8",
-          "source": "node4",
-          "target": "node7"
-        }
-      },
-      {
-        "data": {
-          "id": "edge9",
-          "source": "node7",
-          "target": "node6"
-        }
-      },
-      {
-        "data": {
-          "id": "edge10",
-          "source": "node6",
-          "target": "node7"
-        }
-      },
-      {
-        "data": {
-          "id": "edge11",
-          "source": "node7",
-          "target": "node8"
-        }
-      },
-      {
-        "data": {
-          "id": "edge12",
-          "source": "node8",
-          "target": "node9"
-        }
-      }
-    ],
-    "sequence": [
-      {
-        "nodeId": "node5",
-        "annotation": "Builders have to stake on the beacon chain to participate"
-      },
-      {
-        "nodeId": "graph1_node1",
-        "annotation": "Builders submit their bids directly to proposers or broadcast them on a P2P network"
-      },
-      {
-        "nodeId": "node4",
-        "annotation": "Proposers collect bids, choose the highest and incorporate the SignedExecutionPayloadHeader into their beacon block"
-      },
-      {
-        "nodeId": "node6",
-        "annotation": "The proposer broadcasts the signed beacon block, and the builder's staked ETH is reduced to pay the proposer"
-      },
-      {
-        "nodeId": "node7",
-        "annotation": "Upon seeing their header included in a valid beacon block, the builder reveals their full ExecutionPayloadEnvelope, containing the transactions and data for the block"
-      },
-      {
-        "nodeId": "node8",
-        "annotation": "A dedicated committee attests to the timely presence of the builder's payload"
-      },
-      {
-        "nodeId": "node9",
-        "annotation": "Validators validate the received payload against the committed header in the beacon block. If it's valid and timely, as attested by the PTC, it's likely included in the canonical chain"
-      }
-    ]
-  }
-]
+      ]
+    }
+  ]
