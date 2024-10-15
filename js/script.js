@@ -350,17 +350,27 @@ function switchGraph(index) {
   renderLegend();
 }
 
-// Function to load a graph into Cytoscape
 function loadGraph(graphData) {
   // Destroy existing Cytoscape instance if any
   if (cy) {
     cy.destroy();
   }
 
+  // Prepare elements for Cytoscape
+  const elements = [];
+
+  // Handle nodes
+  const nodesArray = graphData.nodes || (graphData.elements && graphData.elements.nodes) || [];
+  elements.push(...nodesArray);
+
+  // Handle edges
+  const edgesArray = graphData.edges || (graphData.elements && graphData.elements.edges) || [];
+  elements.push(...edgesArray);
+
   // Initialize Cytoscape with the graph data
   cy = cytoscape({
     container: graphContainer,
-    elements: graphData.elements,
+    elements: elements,
     style: [
       // Node styles
       {
@@ -641,25 +651,52 @@ document.getElementById('download-btn').addEventListener('click', function() {
 
   // Prepare the data to download
   const transformedGraphs = graphs.map((graph, index) => {
+    // Ensure that nodes and edges arrays exist
     const nodesArray = graph.elements.nodes || [];
     const edgesArray = graph.elements.edges || [];
 
     const graphId = graph.id || `graph${index}`;
 
-    return {
-      id: graphId, // Ensure the graph has an 'id'
-      name: graph.name,
-      nodes: nodesArray.map(node => ({
-        data: node.data,
+    // Transform nodes
+    const nodes = nodesArray.map(node => {
+      const newNode = {
+        data: { ...node.data },
         position: node.position
-      })),
-      edges: edgesArray.map(edge => ({
-        data: edge.data
-      })),
-      sequence: graph.sequence ? graph.sequence.slice() : []
+      };
+      // Prefix node ID
+      newNode.data.id = `${graphId}_${node.data.id}`;
+      return newNode;
+    });
+
+    // Transform edges
+    const edges = edgesArray.map(edge => {
+      const newEdge = {
+        data: { ...edge.data }
+      };
+      // Prefix edge ID
+      newEdge.data.id = `${graphId}_${edge.data.id}`;
+      // Update source and target IDs to match prefixed node IDs
+      newEdge.data.source = `${graphId}_${edge.data.source}`;
+      newEdge.data.target = `${graphId}_${edge.data.target}`;
+      return newEdge;
+    });
+
+    // Transform sequence
+    const sequence = graph.sequence ? graph.sequence.map(seqItem => ({
+      nodeId: `${graphId}_${seqItem.nodeId}`,
+      annotation: seqItem.annotation
+    })) : [];
+
+    return {
+      id: graphId,
+      name: graph.name,
+      nodes: nodes,
+      edges: edges,
+      sequence: sequence
     };
   });
 
+  // Convert the transformed graphs to JSON
   const dataStr = JSON.stringify(transformedGraphs, null, 2);
   const blob = new Blob([dataStr], { type: "application/json" });
   const url = URL.createObjectURL(blob);
@@ -694,8 +731,62 @@ document.getElementById('load-btn').addEventListener('click', function() {
         const contents = e.target.result;
         const loadedGraphs = JSON.parse(contents);
         if (Array.isArray(loadedGraphs)) {
-          // Replace the existing graphs with loadedGraphs
-          graphs = loadedGraphs;
+          // Transform the loaded graphs back to the editor's internal format
+          graphs = loadedGraphs.map(graph => {
+            // Remove the graph ID prefix from node and edge IDs
+            const graphIdPrefix = graph.id + '_';
+
+            // Create a mapping from old IDs to new IDs (without the prefix)
+            const idMap = {};
+
+            // Process nodes
+            const nodes = graph.nodes.map(node => {
+              const oldId = node.data.id;
+              const newId = oldId.startsWith(graphIdPrefix) ? oldId.substring(graphIdPrefix.length) : oldId;
+              idMap[oldId] = newId;
+              return {
+                group: 'nodes',
+                data: {
+                  ...node.data,
+                  id: newId
+                },
+                position: node.position
+              };
+            });
+
+            // Process edges
+            const edges = graph.edges.map(edge => {
+              const oldId = edge.data.id;
+              const newId = oldId.startsWith(graphIdPrefix) ? oldId.substring(graphIdPrefix.length) : oldId;
+              const newSource = idMap[edge.data.source] || edge.data.source;
+              const newTarget = idMap[edge.data.target] || edge.data.target;
+              return {
+                group: 'edges',
+                data: {
+                  ...edge.data,
+                  id: newId,
+                  source: newSource,
+                  target: newTarget
+                }
+              };
+            });
+
+            // Process sequence
+            const sequence = graph.sequence ? graph.sequence.map(seqItem => ({
+              nodeId: idMap[seqItem.nodeId] || seqItem.nodeId,
+              annotation: seqItem.annotation
+            })) : [];
+
+            return {
+              id: graph.id,
+              name: graph.name,
+              elements: {
+                nodes: nodes,
+                edges: edges
+              },
+              sequence: sequence
+            };
+          });
 
           // Reset current graph index and load the first graph
           currentGraphIndex = 0;
