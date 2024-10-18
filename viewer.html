@@ -205,7 +205,7 @@
             {
               selector: 'node',
               style: {
-                'background-color': '#006064',
+                'background-color': '#00c9d1',
                 'shape': 'ellipse', // Default shape
                 'width': '60px',
                 'height': '60px',
@@ -240,8 +240,9 @@
             {
               selector: 'node:selected',
               style: {
-                'background-color': '#00ced1',
-                'line-color': '#00ced1',
+                'background-color': '#ffffff',
+                'border-color': '#00bfc7',
+                'line-color': '#00e4ed',
                 'target-arrow-color': '#00ced1',
                 'source-arrow-color': '#00ced1'
               }
@@ -250,6 +251,7 @@
             {
               selector: 'node.active',
               style: {
+                'z-index': 9999,
                 'content': 'data(label)'
               }
             },
