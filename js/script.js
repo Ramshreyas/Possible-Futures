@@ -243,12 +243,15 @@ function saveCurrentGraph() {
 function createNewGraph(name = 'Untitled Graph') {
   const graphData = {
     name: name,
-    elements: [], // Empty graph
+    elements: {
+      nodes: [],
+      edges: []
+    },
     sequence: [] // For sequencing interface
   };
 
   // Add a default node to every new graph
-  graphData.elements.push({
+  graphData.elements.nodes.push({
     group: 'nodes',
     data: {
       id: 'node1',
@@ -816,8 +819,17 @@ document.getElementById('reset-btn').addEventListener('click', function() {
 });
 
 
-// Call init to set up the editor
-init();
+// Initialize the editor with a default graph
+function init() {
+  createNewGraph('Untitled Graph 1');
+  renderLegend();
+  switchGraph(0); // Switch to the first graph immediately
+}
+
+// Wrap the init call inside DOMContentLoaded event listener
+document.addEventListener('DOMContentLoaded', function() {
+  init();
+});
 
 // Save the current graph before unloading the page
 window.addEventListener('beforeunload', saveCurrentGraph);
