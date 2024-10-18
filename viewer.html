@@ -206,7 +206,7 @@
               selector: 'node',
               style: {
                 'background-color': '#00c9d1',
-                'shape': 'ellipse', // Default shape
+                'shape': 'data(nodeShape)',
                 'width': '60px',
                 'height': '60px',
                 'border-width': '2px',
@@ -216,13 +216,7 @@
                 'text-valign': 'bottom',
                 'text-halign': 'center',
                 'text-margin-y': '4px',
-              }
-            },
-            // Apply shape mapping only to nodes with 'nodeShape' data defined
-            {
-              selector: 'node[nodeShape]',
-              style: {
-                'shape': 'data(nodeShape)'
+                'content': 'data(label)'
               }
             },
             // Edge styles
@@ -247,21 +241,7 @@
                 'source-arrow-color': '#00ced1'
               }
             },
-            // Active graph nodes (show labels)
-            {
-              selector: 'node.active',
-              style: {
-                'z-index': 9999,
-                'content': 'data(label)'
-              }
-            },
-            // Inactive graph nodes (hide labels)
-            {
-              selector: 'node.inactive',
-              style: {
-                'content': ''
-              }
-            },
+            // Active node styling (node that is currently focused)
             {
               selector: 'node.active-node',
               style: {
@@ -274,10 +254,23 @@
             {
               selector: 'node.sequence-node',
               style: {
-                'border-color': '#ffeb3b', // Yellow color
+                'border-color': '#faa81b', // Yellow color
                 'border-width': '4px'
               }
             },
+            // Inactive graph nodes (optional styling)
+            {
+              selector: 'node.inactive',
+              style: {
+                'opacity': 0.3
+              }
+            },
+            {
+              selector: 'edge.inactive',
+              style: {
+                'opacity': 0.3
+              }
+            }
           ],
           layout: {
             name: 'preset' // Use positions defined in the nodes
@@ -293,6 +286,7 @@
 
         // Build legend
         const legendDiv = document.getElementById('legend');
+        legendDiv.innerHTML = ''; // Clear existing legend items
 
         graphs.forEach(graph => {
           const div = document.createElement('div');
@@ -308,9 +302,22 @@
         // Initial call to set graph visibility and legend
         updateGraphVisibility();
         updateSelection();
-        updateAnnotation();
         cy.ready(function() {
-          cy.fit(cy.elements(),20);
+          cy.fit(cy.elements(), 20);
+        });
+
+        // Event listener for node clicks
+        cy.on('tap', 'node', function(evt) {
+          var node = evt.target;
+          // Remove 'active-node' class from all nodes
+          cy.$('node').removeClass('active-node');
+          // Add 'active-node' class to the clicked node
+          node.addClass('active-node');
+          // Select the node
+          cy.$('node').unselect();
+          node.select();
+          // Update the annotation
+          updateAnnotation(node.data('annotation'));
         });
       }
 
@@ -324,7 +331,6 @@
             currentStep = 0; // Reset to first step
             updateGraphVisibility();
             updateSelection();
-            updateAnnotation();
           });
         });
       }
@@ -346,11 +352,11 @@
           const graphElements = cy.$(`.${graph.id}`);
           if (graph.id === currentGraphId) {
             // Highlight current graph
-            graphElements.removeClass('inactive').addClass('active');
+            graphElements.removeClass('inactive');
             graphElements.style('opacity', 1);
           } else {
             // Dim other graphs
-            graphElements.removeClass('active').addClass('inactive');
+            graphElements.addClass('inactive');
             graphElements.style('opacity', 0.3);
           }
         });
@@ -358,21 +364,26 @@
       }
 
       function updateSelection() {
-        cy.$('node').unselect(); // Unselect all nodes
+        // Remove 'sequence-node' and 'active-node' classes from all nodes
+        cy.$('node').removeClass('sequence-node').removeClass('active-node');
         const currentGraph = graphs.find(g => g.id === currentGraphId);
         const sequenceItem = currentGraph.sequence[currentStep];
         if (sequenceItem) {
           const currentNodeId = sequenceItem.nodeId;
-          cy.$(`#${currentNodeId}`).select(); // Select current node
+          const node = cy.$(`#${currentNodeId}`);
+          node.addClass('sequence-node');
+          node.addClass('active-node');
+          // Select the node
+          cy.$('node').unselect();
+          node.select();
+          // Update the annotation
+          updateAnnotation(node.data('annotation'));
         }
       }
 
-      function updateAnnotation() {
+      function updateAnnotation(annotation) {
         const textArea = document.getElementById('text-area');
-        const currentGraph = graphs.find(g => g.id === currentGraphId);
-        const sequenceItem = currentGraph.sequence[currentStep];
-        if (sequenceItem) {
-          const annotation = sequenceItem.annotation;
+        if (annotation) {
           textArea.textContent = annotation;
         } else {
           textArea.textContent = '';
@@ -385,7 +396,6 @@
         if (currentStep < currentGraph.sequence.length - 1) {
           currentStep++;
           updateSelection();
-          updateAnnotation();
         }
       });
 
@@ -393,7 +403,6 @@
         if (currentStep > 0) {
           currentStep--;
           updateSelection();
-          updateAnnotation();
         }
       });
     };
