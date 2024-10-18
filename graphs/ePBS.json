@@ -104,7 +104,7 @@
             "id": "graph0_node10",
             "label": "Public Mempool",
             "nodeShape": "ellipse",
-            "annotation": "New node annotation"
+            "annotation": "User transactions are broadcast to the network and collected in the public mempool"
           },
           "position": {
             "x": -64.79211355831215,
@@ -116,7 +116,7 @@
             "id": "graph0_node11",
             "label": "Private Orderflow",
             "nodeShape": "ellipse",
-            "annotation": "New node annotation"
+            "annotation": "Sophisticated actors may submit transactions directly to builders"
           },
           "position": {
             "x": -68.07737551312994,
@@ -273,7 +273,7 @@
             "id": "graph1_graph1_node11",
             "label": "Private Orderflow",
             "nodeShape": "ellipse",
-            "annotation": "New node annotation"
+            "annotation": "Sophisticated actors may submit transactions directly to builders"
           },
           "position": {
             "x": -68.07737551312994,
@@ -285,7 +285,7 @@
             "id": "graph1_graph1_node10",
             "label": "Public Mempool",
             "nodeShape": "ellipse",
-            "annotation": "New node annotation"
+            "annotation": "User transactions are broadcast to the network and collected in the public mempool"
           },
           "position": {
             "x": -64.79211355831215,

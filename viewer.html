@@ -238,7 +238,9 @@
                 'border-color': '#00bfc7',
                 'line-color': '#00e4ed',
                 'target-arrow-color': '#00ced1',
-                'source-arrow-color': '#00ced1'
+                'source-arrow-color': '#00ced1',
+                'z-index': 9999,
+                'opacity': 1
               }
             },
             // Active node styling (node that is currently focused)
@@ -258,11 +260,22 @@
                 'border-width': '4px'
               }
             },
+            // Active graph nodes (show labels)
+            {
+              selector: 'node.active',
+              style: {
+                'z-index': 9999,
+                'content': 'data(label)'
+              }
+            },
             // Inactive graph nodes (optional styling)
             {
               selector: 'node.inactive',
               style: {
-                'opacity': 0.3
+                'opacity': 0.3,
+                'content': '',
+                'z-index': 0,
+                'events': 'no'
               }
             },
             {
@@ -309,11 +322,6 @@
         // Event listener for node clicks
         cy.on('tap', 'node', function(evt) {
           var node = evt.target;
-          // Remove 'active-node' class from all nodes
-          cy.$('node').removeClass('active-node');
-          // Add 'active-node' class to the clicked node
-          node.addClass('active-node');
-          // Select the node
           cy.$('node').unselect();
           node.select();
           // Update the annotation
@@ -358,6 +366,7 @@
             // Dim other graphs
             graphElements.addClass('inactive');
             graphElements.style('opacity', 0.3);
+            graphElements.style('z-index', 0);
           }
         });
         updateLegend();
@@ -365,7 +374,7 @@
 
       function updateSelection() {
         // Remove 'sequence-node' and 'active-node' classes from all nodes
-        cy.$('node').removeClass('sequence-node').removeClass('active-node');
+        cy.$('node').removeClass('sequence-node').removeClass('active-node').removeClass('active');
         const currentGraph = graphs.find(g => g.id === currentGraphId);
         const sequenceItem = currentGraph.sequence[currentStep];
         if (sequenceItem) {
@@ -373,6 +382,7 @@
           const node = cy.$(`#${currentNodeId}`);
           node.addClass('sequence-node');
           node.addClass('active-node');
+          node.addClass('active');
           // Select the node
           cy.$('node').unselect();
           node.select();
