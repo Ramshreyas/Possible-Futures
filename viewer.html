@@ -261,7 +261,23 @@
               style: {
                 'content': ''
               }
-            }
+            },
+            {
+              selector: 'node.active-node',
+              style: {
+                'border-color': '#00ced1', // Teal color
+                'border-width': '4px',
+                'z-index': 9999
+              }
+            },
+            // Sequence node styling (node at the current sequence step)
+            {
+              selector: 'node.sequence-node',
+              style: {
+                'border-color': '#ffeb3b', // Yellow color
+                'border-width': '4px'
+              }
+            },
           ],
           layout: {
             name: 'preset' // Use positions defined in the nodes
