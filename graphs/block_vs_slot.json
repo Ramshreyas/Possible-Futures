@@ -1,0 +1,284 @@
+[
+  {
+    "id": "graph0",
+    "name": "Block Auction",
+    "nodes": [
+      {
+        "data": {
+          "id": "graph0_node1",
+          "label": "Builder",
+          "nodeShape": "ellipse",
+          "annotation": "Builder submits bid and hash tree root to proposer at time t"
+        },
+        "position": {
+          "x": -101,
+          "y": 153
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node2",
+          "label": "Proposer",
+          "nodeShape": "diamond",
+          "annotation": "Proposer selects bid and submits signed execution payload header to beacon chain"
+        },
+        "position": {
+          "x": 146,
+          "y": 237
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node3",
+          "label": "Beacon Chain",
+          "nodeShape": "heptagon",
+          "annotation": "Builder sees valid execution block with their payload header..."
+        },
+        "position": {
+          "x": 395,
+          "y": 329
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node4",
+          "label": "Builder",
+          "nodeShape": "ellipse",
+          "annotation": "...and releases full execution payload at time t+dt"
+        },
+        "position": {
+          "x": -100,
+          "y": 425
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node5",
+          "label": "Payload Timeliness Committee",
+          "nodeShape": "diamond",
+          "annotation": "PTC attests to the timeliness of the block"
+        },
+        "position": {
+          "x": 153,
+          "y": 493
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node6",
+          "label": "Canonical Chain",
+          "nodeShape": "heptagon",
+          "annotation": "Block is validated for addition to the canonical chain"
+        },
+        "position": {
+          "x": 398,
+          "y": 551
+        }
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "graph0_edge1",
+          "source": "graph0_node1",
+          "target": "graph0_node2"
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_edge2",
+          "source": "graph0_node2",
+          "target": "graph0_node3"
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_edge3",
+          "source": "graph0_node3",
+          "target": "graph0_node4"
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_edge4",
+          "source": "graph0_node4",
+          "target": "graph0_node5"
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_edge5",
+          "source": "graph0_node5",
+          "target": "graph0_node6"
+        }
+      }
+    ],
+    "sequence": [
+      {
+        "nodeId": "graph0_node1",
+        "annotation": "Builder submits bid and hash tree root to proposer at time t"
+      },
+      {
+        "nodeId": "graph0_node2",
+        "annotation": "Proposer selects bid and submits signed execution payload header to beacon chain"
+      },
+      {
+        "nodeId": "graph0_node3",
+        "annotation": "Builder sees valid execution block with their payload header..."
+      },
+      {
+        "nodeId": "graph0_node4",
+        "annotation": "...and releases full execution payload at time t+dt"
+      },
+      {
+        "nodeId": "graph0_node5",
+        "annotation": "PTC attests to the timeliness of the block"
+      },
+      {
+        "nodeId": "graph0_node6",
+        "annotation": "Block is validated for addition to the canonical chain"
+      }
+    ]
+  },
+  {
+    "id": "graph1",
+    "name": "Slot Auction",
+    "nodes": [
+      {
+        "data": {
+          "id": "graph1_graph1_node1",
+          "label": "Builder",
+          "nodeShape": "ellipse",
+          "annotation": "Builder submits *only bid* to proposer at time t"
+        },
+        "position": {
+          "x": -101,
+          "y": 153
+        }
+      },
+      {
+        "data": {
+          "id": "graph1_graph1_node2",
+          "label": "Proposer",
+          "nodeShape": "diamond",
+          "annotation": "Proposer selects bid and submits signed header to beacon chain"
+        },
+        "position": {
+          "x": 146,
+          "y": 238
+        }
+      },
+      {
+        "data": {
+          "id": "graph1_graph1_node3",
+          "label": "Beacon Chain",
+          "nodeShape": "heptagon",
+          "annotation": "Builder sees valid block with their header..."
+        },
+        "position": {
+          "x": 395,
+          "y": 329
+        }
+      },
+      {
+        "data": {
+          "id": "graph1_graph1_node4",
+          "label": "Builder",
+          "nodeShape": "ellipse",
+          "annotation": "...and *creates* full execution payload at time t+dt"
+        },
+        "position": {
+          "x": -100,
+          "y": 425
+        }
+      },
+      {
+        "data": {
+          "id": "graph1_graph1_node5",
+          "label": "Payload Timeliness Committee",
+          "nodeShape": "diamond",
+          "annotation": "PTC attests to the timeliness of the block"
+        },
+        "position": {
+          "x": 153,
+          "y": 493
+        }
+      },
+      {
+        "data": {
+          "id": "graph1_graph1_node6",
+          "label": "Canonical Chain",
+          "nodeShape": "heptagon",
+          "annotation": "Block is validated for addition to the canonical chain"
+        },
+        "position": {
+          "x": 398,
+          "y": 551
+        }
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "graph1_graph1_edge1",
+          "source": "graph1_graph1_node1",
+          "target": "graph1_graph1_node2"
+        }
+      },
+      {
+        "data": {
+          "id": "graph1_graph1_edge2",
+          "source": "graph1_graph1_node2",
+          "target": "graph1_graph1_node3"
+        }
+      },
+      {
+        "data": {
+          "id": "graph1_graph1_edge3",
+          "source": "graph1_graph1_node3",
+          "target": "graph1_graph1_node4"
+        }
+      },
+      {
+        "data": {
+          "id": "graph1_graph1_edge4",
+          "source": "graph1_graph1_node4",
+          "target": "graph1_graph1_node5"
+        }
+      },
+      {
+        "data": {
+          "id": "graph1_graph1_edge5",
+          "source": "graph1_graph1_node5",
+          "target": "graph1_graph1_node6"
+        }
+      }
+    ],
+    "sequence": [
+      {
+        "nodeId": "graph1_graph1_node1",
+        "annotation": "Builder submits *only bid* to proposer at time t"
+      },
+      {
+        "nodeId": "graph1_graph1_node2",
+        "annotation": "Proposer selects bid and submits signed header to beacon chain"
+      },
+      {
+        "nodeId": "graph1_graph1_node3",
+        "annotation": "Builder sees valid block with their header..."
+      },
+      {
+        "nodeId": "graph1_graph1_node4",
+        "annotation": "...and *creates* full execution payload at time t+dt"
+      },
+      {
+        "nodeId": "graph1_graph1_node5",
+        "annotation": "PTC attests to the timeliness of the block"
+      },
+      {
+        "nodeId": "graph1_graph1_node6",
+        "annotation": "Block is validated for addition to the canonical chain"
+      }
+    ]
+  }
+]
