@@ -128,295 +128,299 @@
   <!-- Inline JavaScript -->
   <script>
     window.onload = function() {
-      // Declare variables at the top level
-      let cy;
-      let graphs = [];
-      let currentGraphId;
-      let currentStep = 0;
+        // Declare variables at the top level
+        let cy;
+        let graphs = [];
+        let currentGraphId;
+        let currentStep = 0;
 
-      // Check if graph data is in localStorage
-      const graphDataStr = localStorage.getItem('graphData');
-      if (graphDataStr) {
-        graphs = JSON.parse(graphDataStr);
-        console.log('Loaded graph data from localStorage:', graphs);
-        // Initialize the app with the graphs data
-        initializeApp();
-        // Optionally, clear the data from localStorage
-        localStorage.removeItem('graphData');
-      } else {
-        // Proceed with existing code to get 'data' URL parameter
-        // Function to get URL parameters
-        function getUrlParameter(name) {
-          const urlParams = new URLSearchParams(window.location.search);
-          return urlParams.get(name);
-        }
-
-        // Get the 'data' parameter from the URL
-        const dataUrl = getUrlParameter('data');
-
-        if (!dataUrl) {
-          alert('Error: No data URL specified in the "data" URL parameter.');
+        // Check if 'graphs' variable is defined (embedded data)
+        if (typeof embeddedGraphs !== 'undefined') {
+            graphs = embeddedGraphs;
+            initializeApp();
         } else {
-          // Fetch the JSON file
-          fetch(dataUrl)
-            .then(response => {
-              if (!response.ok) {
-                throw new Error('Network response was not OK');
-              }
-              return response.json();
-            })
-            .then(jsonData => {
-              graphs = jsonData;
-              initializeApp();
-            })
-            .catch(error => {
-              console.error('Error fetching or parsing data:', error);
-              alert('Error fetching or parsing data. See console for details.');
-            });
-        }
-      }
-
-      function initializeApp() {
-        currentGraphId = graphs[0]?.id || 'main'; // Default to first graph's ID
-        currentStep = 0; // Track the current step in the sequence
-
-        // Combine all graph elements
-        const elements = [];
-
-        graphs.forEach(graph => {
-          const graphClass = graph.id || 'main';
-
-          // Determine where nodes and edges are located
-          const nodesArray = graph.nodes || (graph.elements && graph.elements.nodes) || [];
-          const edgesArray = graph.edges || (graph.elements && graph.elements.edges) || [];
-
-          // Add nodes
-          elements.push(...nodesArray.map(node => ({ ...node, classes: graphClass })));
-          // Add edges
-          elements.push(...edgesArray.map(edge => ({ ...edge, classes: graphClass })));
-        });
-
-        // Initialize Cytoscape
-        cy = cytoscape({
-          container: document.getElementById('graph-container'),
-          elements: elements,
-          style: [
-            // Default node styles
-            {
-              selector: 'node',
-              style: {
-                'background-color': '#00c9d1',
-                'shape': 'data(nodeShape)',
-                'width': '60px',
-                'height': '60px',
-                'border-width': '2px',
-                'border-color': '#004d40',
-                'color': '#e0e0e0',
-                'font-size': '14px',
-                'text-valign': 'bottom',
-                'text-halign': 'center',
-                'text-margin-y': '4px',
-                'content': 'data(label)'
-              }
-            },
-            // Edge styles
-            {
-              selector: 'edge',
-              style: {
-                'width': 3,
-                'line-color': '#008770',
-                'target-arrow-color': '#004d40',
-                'target-arrow-shape': 'triangle',
-                'curve-style': 'bezier',
-              }
-            },
-            // Selected node styling
-            {
-              selector: 'node:selected',
-              style: {
-                'background-color': '#ffffff',
-                'border-color': '#00bfc7',
-                'line-color': '#00e4ed',
-                'target-arrow-color': '#00ced1',
-                'source-arrow-color': '#00ced1',
-                'z-index': 9999,
-                'opacity': 1
-              }
-            },
-            // Active node styling (node that is currently focused)
-            {
-              selector: 'node.active-node',
-              style: {
-                'border-color': '#00ced1', // Teal color
-                'border-width': '4px',
-                'z-index': 9999
-              }
-            },
-            // Sequence node styling (node at the current sequence step)
-            {
-              selector: 'node.sequence-node',
-              style: {
-                'border-color': '#faa81b', // Yellow color
-                'border-width': '4px'
-              }
-            },
-            // Active graph nodes (show labels)
-            {
-              selector: 'node.active',
-              style: {
-                'z-index': 9999,
-                'content': 'data(label)'
-              }
-            },
-            // Inactive graph nodes (optional styling)
-            {
-              selector: 'node.inactive',
-              style: {
-                'opacity': 0.3,
-                'content': '',
-                'z-index': 0,
-                'events': 'no'
-              }
-            },
-            {
-              selector: 'edge.inactive',
-              style: {
-                'color': '#004d40',
-                'opacity': 0.3
-              }
+            // Check if graph data is in localStorage
+            const graphDataStr = localStorage.getItem('graphData');
+            if (graphDataStr) {
+            graphs = JSON.parse(graphDataStr);
+            console.log('Loaded graph data from localStorage:', graphs);
+            initializeApp();
+            localStorage.removeItem('graphData');
+            } else {
+            // Proceed with existing code to get 'data' URL parameter
+            function getUrlParameter(name) {
+                const urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(name);
             }
-          ],
-          layout: {
-            name: 'preset' // Use positions defined in the nodes
-          },
-          userZoomingEnabled: true,
-          userPanningEnabled: true,
-          zoomingEnabled: true,
-          panningEnabled: true,
-          minZoom: 0.1,
-          maxZoom: 10,
-          wheelSensitivity: 0.2,
-        });
 
-        // Build legend
-        const legendDiv = document.getElementById('legend');
-        legendDiv.innerHTML = ''; // Clear existing legend items
+            // Get the 'data' parameter from the URL
+            const dataUrl = getUrlParameter('data');
 
-        graphs.forEach(graph => {
-          const div = document.createElement('div');
-          div.classList.add('legend-item');
-          div.setAttribute('data-graph', graph.id);
-          div.textContent = graph.name;
-          legendDiv.appendChild(div);
-        });
+            if (!dataUrl) {
+                alert('Error: No data URL specified in the "data" URL parameter.');
+            } else {
+                // Fetch the JSON file
+                fetch(dataUrl)
+                .then(response => {
+                    if (!response.ok) {
+                    throw new Error('Network response was not OK');
+                    }
+                    return response.json();
+                })
+                .then(jsonData => {
+                    graphs = jsonData;
+                    initializeApp();
+                })
+                .catch(error => {
+                    console.error('Error fetching or parsing data:', error);
+                    alert('Error fetching or parsing data. See console for details.');
+                });
+            }
+            }
+        }
 
-        // Setup event listeners for legend items
-        setupLegendEvents();
+        function initializeApp() {
+            currentGraphId = graphs[0]?.id || 'main'; // Default to first graph's ID
+            currentStep = 0; // Track the current step in the sequence
 
-        // Initial call to set graph visibility and legend
-        updateGraphVisibility();
-        updateSelection();
-        cy.ready(function() {
-          cy.fit(cy.elements(), 40);
-        });
+            // Combine all graph elements
+            const elements = [];
 
-        // Event listener for node clicks
-        cy.on('tap', 'node', function(evt) {
-          var node = evt.target;
-          cy.$('node').unselect();
-          node.select();
-          // Update the annotation
-          updateAnnotation(node.data('annotation'));
-        });
-      }
+            graphs.forEach(graph => {
+            const graphClass = graph.id || 'main';
 
-      function setupLegendEvents() {
-        const legendItems = document.querySelectorAll('#legend .legend-item');
+            // Determine where nodes and edges are located
+            const nodesArray = graph.nodes || (graph.elements && graph.elements.nodes) || [];
+            const edgesArray = graph.edges || (graph.elements && graph.elements.edges) || [];
 
-        legendItems.forEach(item => {
-          item.addEventListener('click', () => {
-            const graphId = item.getAttribute('data-graph');
-            currentGraphId = graphId;
-            currentStep = 0; // Reset to first step
+            // Add nodes
+            elements.push(...nodesArray.map(node => ({ ...node, classes: graphClass })));
+            // Add edges
+            elements.push(...edgesArray.map(edge => ({ ...edge, classes: graphClass })));
+            });
+
+            // Initialize Cytoscape
+            cy = cytoscape({
+            container: document.getElementById('graph-container'),
+            elements: elements,
+            style: [
+                // Default node styles
+                {
+                selector: 'node',
+                style: {
+                    'background-color': '#00c9d1',
+                    'shape': 'data(nodeShape)',
+                    'width': '60px',
+                    'height': '60px',
+                    'border-width': '2px',
+                    'border-color': '#004d40',
+                    'color': '#e0e0e0',
+                    'font-size': '14px',
+                    'text-valign': 'bottom',
+                    'text-halign': 'center',
+                    'text-margin-y': '4px',
+                    'content': 'data(label)'
+                }
+                },
+                // Edge styles
+                {
+                selector: 'edge',
+                style: {
+                    'width': 3,
+                    'line-color': '#008770',
+                    'target-arrow-color': '#004d40',
+                    'target-arrow-shape': 'triangle',
+                    'curve-style': 'bezier',
+                }
+                },
+                // Selected node styling
+                {
+                selector: 'node:selected',
+                style: {
+                    'background-color': '#ffffff',
+                    'border-color': '#00bfc7',
+                    'line-color': '#00e4ed',
+                    'target-arrow-color': '#00ced1',
+                    'source-arrow-color': '#00ced1',
+                    'z-index': 9999,
+                    'opacity': 1
+                }
+                },
+                // Active node styling (node that is currently focused)
+                {
+                selector: 'node.active-node',
+                style: {
+                    'border-color': '#00ced1', // Teal color
+                    'border-width': '4px',
+                    'z-index': 9999
+                }
+                },
+                // Sequence node styling (node at the current sequence step)
+                {
+                selector: 'node.sequence-node',
+                style: {
+                    'border-color': '#faa81b', // Yellow color
+                    'border-width': '4px'
+                }
+                },
+                // Active graph nodes (show labels)
+                {
+                selector: 'node.active',
+                style: {
+                    'z-index': 9999,
+                    'content': 'data(label)'
+                }
+                },
+                // Inactive graph nodes (optional styling)
+                {
+                selector: 'node.inactive',
+                style: {
+                    'opacity': 0.3,
+                    'content': '',
+                    'z-index': 0,
+                    'events': 'no'
+                }
+                },
+                {
+                selector: 'edge.inactive',
+                style: {
+                    'color': '#004d40',
+                    'opacity': 0.3
+                }
+                }
+            ],
+            layout: {
+                name: 'preset' // Use positions defined in the nodes
+            },
+            userZoomingEnabled: true,
+            userPanningEnabled: true,
+            zoomingEnabled: true,
+            panningEnabled: true,
+            minZoom: 0.1,
+            maxZoom: 10,
+            wheelSensitivity: 0.2,
+            });
+
+            // Build legend
+            const legendDiv = document.getElementById('legend');
+            legendDiv.innerHTML = ''; // Clear existing legend items
+
+            graphs.forEach(graph => {
+            const div = document.createElement('div');
+            div.classList.add('legend-item');
+            div.setAttribute('data-graph', graph.id);
+            div.textContent = graph.name;
+            legendDiv.appendChild(div);
+            });
+
+            // Setup event listeners for legend items
+            setupLegendEvents();
+
+            // Initial call to set graph visibility and legend
             updateGraphVisibility();
             updateSelection();
-          });
+            cy.ready(function() {
+            cy.fit(cy.elements(), 40);
+            });
+
+            // Event listener for node clicks
+            cy.on('tap', 'node', function(evt) {
+            var node = evt.target;
+            cy.$('node').unselect();
+            node.select();
+            // Update the annotation
+            updateAnnotation(node.data('annotation'));
+            });
+        }
+
+        function setupLegendEvents() {
+            const legendItems = document.querySelectorAll('#legend .legend-item');
+
+            legendItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const graphId = item.getAttribute('data-graph');
+                currentGraphId = graphId;
+                currentStep = 0; // Reset to first step
+                updateGraphVisibility();
+                updateSelection();
+            });
+            });
+        }
+
+        function updateLegend() {
+            const legendItems = document.querySelectorAll('#legend .legend-item');
+            legendItems.forEach(item => {
+            const graphId = item.getAttribute('data-graph');
+            if (graphId === currentGraphId) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+            });
+        }
+
+        function updateGraphVisibility() {
+            graphs.forEach(graph => {
+            const graphElements = cy.$(`.${graph.id}`);
+            if (graph.id === currentGraphId) {
+                // Highlight current graph
+                graphElements.removeClass('inactive');
+                graphElements.style('opacity', 1);
+            } else {
+                // Dim other graphs
+                graphElements.addClass('inactive');
+                graphElements.style('opacity', 0.3);
+                graphElements.style('z-index', 0);
+            }
+            });
+            updateLegend();
+        }
+
+        function updateSelection() {
+            // Remove 'sequence-node' and 'active-node' classes from all nodes
+            cy.$('node').removeClass('sequence-node').removeClass('active-node').removeClass('active');
+            const currentGraph = graphs.find(g => g.id === currentGraphId);
+            const sequenceItem = currentGraph.sequence[currentStep];
+            if (sequenceItem) {
+            const currentNodeId = sequenceItem.nodeId;
+            const node = cy.$(`#${currentNodeId}`);
+            node.addClass('sequence-node');
+            node.addClass('active-node');
+            node.addClass('active');
+            // Select the node
+            cy.$('node').unselect();
+            node.select();
+            // Update the annotation
+            updateAnnotation(node.data('annotation'));
+            }
+        }
+
+        function updateAnnotation(annotation) {
+            const textArea = document.getElementById('text-area');
+            if (annotation) {
+            textArea.textContent = annotation;
+            } else {
+            textArea.textContent = '';
+            }
+        }
+
+        // Event listeners for navigation buttons
+        document.getElementById('nextBtn').addEventListener('click', () => {
+            const currentGraph = graphs.find(g => g.id === currentGraphId);
+            if (currentStep < currentGraph.sequence.length - 1) {
+            currentStep++;
+            updateSelection();
+            }
         });
-      }
 
-      function updateLegend() {
-        const legendItems = document.querySelectorAll('#legend .legend-item');
-        legendItems.forEach(item => {
-          const graphId = item.getAttribute('data-graph');
-          if (graphId === currentGraphId) {
-            item.classList.add('active');
-          } else {
-            item.classList.remove('active');
-          }
+        document.getElementById('prevBtn').addEventListener('click', () => {
+            if (currentStep > 0) {
+            currentStep--;
+            updateSelection();
+            }
         });
-      }
-
-      function updateGraphVisibility() {
-        graphs.forEach(graph => {
-          const graphElements = cy.$(`.${graph.id}`);
-          if (graph.id === currentGraphId) {
-            // Highlight current graph
-            graphElements.removeClass('inactive');
-            graphElements.style('opacity', 1);
-          } else {
-            // Dim other graphs
-            graphElements.addClass('inactive');
-            graphElements.style('opacity', 0.3);
-            graphElements.style('z-index', 0);
-          }
-        });
-        updateLegend();
-      }
-
-      function updateSelection() {
-        // Remove 'sequence-node' and 'active-node' classes from all nodes
-        cy.$('node').removeClass('sequence-node').removeClass('active-node').removeClass('active');
-        const currentGraph = graphs.find(g => g.id === currentGraphId);
-        const sequenceItem = currentGraph.sequence[currentStep];
-        if (sequenceItem) {
-          const currentNodeId = sequenceItem.nodeId;
-          const node = cy.$(`#${currentNodeId}`);
-          node.addClass('sequence-node');
-          node.addClass('active-node');
-          node.addClass('active');
-          // Select the node
-          cy.$('node').unselect();
-          node.select();
-          // Update the annotation
-          updateAnnotation(node.data('annotation'));
-        }
-      }
-
-      function updateAnnotation(annotation) {
-        const textArea = document.getElementById('text-area');
-        if (annotation) {
-          textArea.textContent = annotation;
-        } else {
-          textArea.textContent = '';
-        }
-      }
-
-      // Event listeners for navigation buttons
-      document.getElementById('nextBtn').addEventListener('click', () => {
-        const currentGraph = graphs.find(g => g.id === currentGraphId);
-        if (currentStep < currentGraph.sequence.length - 1) {
-          currentStep++;
-          updateSelection();
-        }
-      });
-
-      document.getElementById('prevBtn').addEventListener('click', () => {
-        if (currentStep > 0) {
-          currentStep--;
-          updateSelection();
-        }
-      });
     };
   </script>
+
 </body>
 </html>

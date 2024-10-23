@@ -648,7 +648,7 @@ function init() {
   switchGraph(0); // Switch to the first graph immediately
 }
 
-document.getElementById('download-btn').addEventListener('click', function() {
+document.getElementById('download-json-btn').addEventListener('click', function() {
   // Save all graphs data
   saveAllGraphs();
 
@@ -716,6 +716,102 @@ document.getElementById('download-btn').addEventListener('click', function() {
   URL.revokeObjectURL(url);
   document.body.removeChild(a);
 });
+
+document.getElementById('download-html-btn').addEventListener('click', function(event) {
+  event.preventDefault();
+  downloadAsHTML();
+});
+
+function downloadAsHTML() {
+  // Save all graphs data
+  saveAllGraphs();
+
+  // Prepare the graph data
+  const transformedGraphs = graphs.map((graph, index) => {
+    // Ensure that nodes and edges arrays exist
+    const nodesArray = graph.elements.nodes || [];
+    const edgesArray = graph.elements.edges || [];
+
+    const graphId = graph.id || `graph${index}`;
+
+    // Transform nodes
+    const nodes = nodesArray.map(node => {
+      const newNode = {
+        data: { ...node.data },
+        position: node.position
+      };
+      // Prefix node ID
+      newNode.data.id = `${graphId}_${node.data.id}`;
+      return newNode;
+    });
+
+    // Transform edges
+    const edges = edgesArray.map(edge => {
+      const newEdge = {
+        data: { ...edge.data }
+      };
+      // Prefix edge ID
+      newEdge.data.id = `${graphId}_${edge.data.id}`;
+      // Update source and target IDs to match prefixed node IDs
+      newEdge.data.source = `${graphId}_${edge.data.source}`;
+      newEdge.data.target = `${graphId}_${edge.data.target}`;
+      return newEdge;
+    });
+
+    // Transform sequence
+    const sequence = graph.sequence ? graph.sequence.map(seqItem => ({
+      nodeId: `${graphId}_${seqItem.nodeId}`,
+      annotation: seqItem.annotation
+    })) : [];
+
+    return {
+      id: graphId,
+      name: graph.name,
+      nodes: nodes,
+      edges: edges,
+      sequence: sequence
+    };
+  });
+
+  // Convert the transformed graphs to a JSON string
+  const graphDataStr = JSON.stringify(transformedGraphs, null, 2);
+  console.log('Graph data:', graphDataStr);
+
+  // Fetch the viewer template (viewer.html)
+  fetch('viewer.html')
+    .then(response => response.text())
+    .then(viewerHtml => {
+      // Modify the viewerHtml to embed the graph data
+      // Insert the graphDataStr into a script tag
+      const injectedHtml = viewerHtml.replace(
+        '</body>',
+        `<script>
+          var embeddedGraphs = ${graphDataStr};
+        </script>
+        </body>`
+      );
+
+      // Create a Blob from the injectedHtml
+      const blob = new Blob([injectedHtml], { type: "text/html" });
+      const url = URL.createObjectURL(blob);
+
+      // Create a temporary link element and trigger download
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'viewer.html';
+      a.style.display = 'none';
+      document.body.appendChild(a);
+      a.click();
+
+      // Clean up
+      URL.revokeObjectURL(url);
+      document.body.removeChild(a);
+    })
+    .catch(error => {
+      console.error('Error fetching viewer template:', error);
+      alert('Error generating HTML file. See console for details.');
+    });
+}
 
 document.getElementById('load-btn').addEventListener('click', function() {
   // Create an input element to select the file

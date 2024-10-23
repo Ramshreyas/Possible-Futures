@@ -89,9 +89,15 @@
           <button class="btn" id="load-btn" title="Load Graph">
             <i class="fas fa-upload"></i>
           </button>
-          <button class="btn" id="download-btn" title="Download Graph">
-            <i class="fas fa-download"></i>
-          </button>
+          <div class="dropdown">
+            <button class="btn" id="download-btn" title="Download Graph">
+              <i class="fas fa-download"></i>
+            </button>
+            <div class="dropdown-menu">
+              <button class="dropdown-item" id="download-json-btn">JSON</button>
+              <button class="dropdown-item" id="download-html-btn">HTML</button>
+            </div>
+          </div>          
           <button class="btn" id="reset-btn" title="Reset Graph">
             <i class="fas fa-redo"></i>
           </button>
@@ -108,6 +114,7 @@
   </div>
 
   <!-- External JavaScript -->
-  <script src="js/script.js"></script>
+  <script src="js/editor.js"></script>
+
 </body>
 </html>
