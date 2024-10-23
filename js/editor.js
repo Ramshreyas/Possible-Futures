@@ -775,7 +775,6 @@ function downloadAsHTML() {
 
   // Convert the transformed graphs to a JSON string
   const graphDataStr = JSON.stringify(transformedGraphs, null, 2);
-  console.log('Graph data:', graphDataStr);
 
   // Fetch the viewer template (viewer.html)
   fetch('viewer.html')
