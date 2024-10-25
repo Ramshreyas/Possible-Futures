@@ -1,0 +1,97 @@
+[
+  {
+    "id": "graph0",
+    "name": "Inclusion Lists",
+    "nodes": [
+      {
+        "data": {
+          "id": "graph0_node1",
+          "label": "User",
+          "nodeShape": "ellipse",
+          "annotation": "The User sends an inclusion request to the Nth block proposer."
+        },
+        "position": {
+          "x": 100,
+          "y": 250
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node2",
+          "label": "Nth Proposer",
+          "nodeShape": "diamond",
+          "annotation": "The Nth block proposer proposes the block, as well as a signed Summary and list of transactions."
+        },
+        "position": {
+          "x": 242,
+          "y": 250
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node3",
+          "label": "N+1th Proposer",
+          "nodeShape": "diamond",
+          "annotation": "The N+1th block proposer proposes a block, and includes a signed summary of IL transactions included from the Nth block metadata"
+        },
+        "position": {
+          "x": 369,
+          "y": 249
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node4",
+          "label": "N+1th Attestor",
+          "nodeShape": "diamond",
+          "annotation": "The N+1th block attesters can validate that the Nth proposers IL list was honoured, and validate the block for inclusion."
+        },
+        "position": {
+          "x": 511,
+          "y": 248
+        }
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "graph0_edge1",
+          "source": "graph0_node1",
+          "target": "graph0_node2"
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_edge2",
+          "source": "graph0_node2",
+          "target": "graph0_node3"
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_edge3",
+          "source": "graph0_node3",
+          "target": "graph0_node4"
+        }
+      }
+    ],
+    "sequence": [
+      {
+        "nodeId": "graph0_node1",
+        "annotation": "The User sends an inclusion request to the Nth block proposer."
+      },
+      {
+        "nodeId": "graph0_node2",
+        "annotation": "The Nth block proposer proposes the block, as well as a signed Summary and list of transactions."
+      },
+      {
+        "nodeId": "graph0_node3",
+        "annotation": "The N+1th block proposer proposes a block, and includes a signed summary of IL transactions included from the Nth block metadata"
+      },
+      {
+        "nodeId": "graph0_node4",
+        "annotation": "The N+1th block attesters can validate that the Nth proposers IL list was honoured, and validate the block for inclusion."
+      }
+    ]
+  }
+]
