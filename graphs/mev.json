@@ -1,0 +1,169 @@
+[
+  {
+    "id": "graph0",
+    "name": "The MEV supply chain",
+    "nodes": [
+      {
+        "data": {
+          "id": "graph0_node1",
+          "label": "User",
+          "nodeShape": "ellipse",
+          "annotation": "Any party who initiates, signs and submits the transaction to a blockchain mempool. "
+        },
+        "position": {
+          "x": -109,
+          "y": 105
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node2",
+          "label": "Mempool",
+          "nodeShape": "rectangle",
+          "annotation": "The public, distributed 'waiting area' where transactions are stored in a pending state until they are included in the next block. Upon inclusion, they are removed from the mempool. The mempool is maintained in a distributed manner by blockchain nodes."
+        },
+        "position": {
+          "x": 107,
+          "y": 107
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node3",
+          "label": "Searcher",
+          "nodeShape": "ellipse",
+          "annotation": "Searchers are agents who look through the public mempool for MEV opportunities. specifically, they bundle user transactions along with their own transactions in a specific order that makes them a profit. Searchers typically send these bundles to 'Builders' who aggregate such bundles and submit them for inclusion to 'Relays' for a fee."
+        },
+        "position": {
+          "x": 106,
+          "y": 260
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node4",
+          "label": "Block Proposer",
+          "nodeShape": "ellipse",
+          "annotation": "The block proposer is a validator who has been psuedorandomly selected to propose the next block. This validator therefore has a monopoly on the next block and has complete control on the ordering and inclusion of all valid transactions. The validator cannot add invalid transactions thanks to an attestation mechanism that is outside the scope of this exploration."
+        },
+        "position": {
+          "x": 517,
+          "y": 112
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node5",
+          "label": "Builder",
+          "nodeShape": "ellipse",
+          "annotation": "Since Ethereum 2.0 the role of block building was seperated from block proposers and given to a new agent, the block builder. Block builders receive 'bundles' from searchers as well as private transactions directly submitted to them to construct candidate blocks for block proposers."
+        },
+        "position": {
+          "x": 246,
+          "y": 260
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node6",
+          "label": "Relay",
+          "nodeShape": "octagon",
+          "annotation": "Relays are decentralized networks that enable block proposers to receive and price blocks from builders in a permissionless manner to create an efficient market for blockspace, and capture MEV for all participants. (They can also enable the communication between searchers and builders, but that is out of scope here)."
+        },
+        "position": {
+          "x": 381,
+          "y": 260
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node8",
+          "label": "Private orderflow",
+          "nodeShape": "ellipse",
+          "annotation": "Users can also directly submit transactions to builders if they do not want to reveal their activity on the public mempool, for a fee. This is usually done by sophisticated participants such as wallet apps, trading firms and others."
+        },
+        "position": {
+          "x": 247,
+          "y": 406
+        }
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "graph0_edge1",
+          "source": "graph0_node1",
+          "target": "graph0_node2"
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_edge2",
+          "source": "graph0_node2",
+          "target": "graph0_node3"
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_edge3",
+          "source": "graph0_node2",
+          "target": "graph0_node4"
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_edge4",
+          "source": "graph0_node3",
+          "target": "graph0_node5"
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_edge5",
+          "source": "graph0_node5",
+          "target": "graph0_node6"
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_edge6",
+          "source": "graph0_node6",
+          "target": "graph0_node4"
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_edge9",
+          "source": "graph0_node8",
+          "target": "graph0_node5"
+        }
+      }
+    ],
+    "sequence": [
+      {
+        "nodeId": "graph0_node1",
+        "annotation": "Any party who initiates, signs and submits the transaction to a blockchain mempool. "
+      },
+      {
+        "nodeId": "graph0_node2",
+        "annotation": "The public, distributed 'waiting area' where transactions are stored in a pending state until they are included in the next block. Upon inclusion, they are removed from the mempool. The mempool is maintained in a distributed manner by blockchain nodes."
+      },
+      {
+        "nodeId": "graph0_node3",
+        "annotation": "Searchers are agents who look through the public mempool for MEV opportunities. specifically, they bundle user transactions along with their own transactions in a specific order that makes them a profit. Searchers typically send these bundles to 'Builders' who aggregate such bundles and submit them for inclusion to 'Relays' for a fee."
+      },
+      {
+        "nodeId": "graph0_node5",
+        "annotation": "Since Ethereum 2.0 the role of block building was seperated from block proposers and given to a new agent, the block builder. Block builders receive 'bundles' from searchers as well as private transactions directly submitted to them to construct candidate blocks for block proposers."
+      },
+      {
+        "nodeId": "graph0_node6",
+        "annotation": "Relays are decentralized networks that enable block proposers to receive and price blocks from builders in a permissionless manner to create an efficient market for blockspace, and capture MEV for all participants. (They can also enable the communication between searchers and builders, but that is out of scope here)."
+      },
+      {
+        "nodeId": "graph0_node4",
+        "annotation": "The block proposer is a validator who has been psuedorandomly selected to propose the next block. This validator therefore has a monopoly on the next block and has complete control on the ordering and inclusion of all valid transactions. The validator cannot add invalid transactions thanks to an attestation mechanism that is outside the scope of this exploration."
+      }
+    ]
+  }
+]
