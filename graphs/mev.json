@@ -11,8 +11,8 @@
           "annotation": "Any party who initiates, signs and submits the transaction to a blockchain mempool. "
         },
         "position": {
-          "x": -109,
-          "y": 105
+          "x": -105.02884282710934,
+          "y": 114.97115717289067
         }
       },
       {
@@ -20,11 +20,11 @@
           "id": "graph0_node2",
           "label": "Mempool",
           "nodeShape": "rectangle",
-          "annotation": "The public, distributed 'waiting area' where transactions are stored in a pending state until they are included in the next block. Upon inclusion, they are removed from the mempool. The mempool is maintained in a distributed manner by blockchain nodes."
+          "annotation": "The public, distributed 'waiting area' where transactions are stored in a pending state until they are included in the next block."
         },
         "position": {
-          "x": 107,
-          "y": 107
+          "x": 104.34294760903646,
+          "y": 115.62820956385421
         }
       },
       {
@@ -32,7 +32,7 @@
           "id": "graph0_node3",
           "label": "Searcher",
           "nodeShape": "ellipse",
-          "annotation": "Searchers are agents who look through the public mempool for MEV opportunities. specifically, they bundle user transactions along with their own transactions in a specific order that makes them a profit. Searchers typically send these bundles to 'Builders' who aggregate such bundles and submit them for inclusion to 'Relays' for a fee."
+          "annotation": "Searchers are agents who look through the public mempool for MEV opportunities. "
         },
         "position": {
           "x": 106,
@@ -44,7 +44,7 @@
           "id": "graph0_node4",
           "label": "Block Proposer",
           "nodeShape": "ellipse",
-          "annotation": "The block proposer is a validator who has been psuedorandomly selected to propose the next block. This validator therefore has a monopoly on the next block and has complete control on the ordering and inclusion of all valid transactions. The validator cannot add invalid transactions thanks to an attestation mechanism that is outside the scope of this exploration."
+          "annotation": "The block proposer is a validator who has been psuedorandomly selected to propose the next block."
         },
         "position": {
           "x": 517,
@@ -56,7 +56,7 @@
           "id": "graph0_node5",
           "label": "Builder",
           "nodeShape": "ellipse",
-          "annotation": "Since Ethereum 2.0 the role of block building was seperated from block proposers and given to a new agent, the block builder. Block builders receive 'bundles' from searchers as well as private transactions directly submitted to them to construct candidate blocks for block proposers."
+          "annotation": "Block builders receive 'bundles' from searchers as well as private transactions directly submitted to them to construct candidate blocks for block proposers."
         },
         "position": {
           "x": 246,
@@ -68,7 +68,7 @@
           "id": "graph0_node6",
           "label": "Relay",
           "nodeShape": "octagon",
-          "annotation": "Relays are decentralized networks that enable block proposers to receive and price blocks from builders in a permissionless manner to create an efficient market for blockspace, and capture MEV for all participants. (They can also enable the communication between searchers and builders, but that is out of scope here)."
+          "annotation": "Relays are decentralized networks that enable block proposers to receive and price blocks from builders in a permissionless manner."
         },
         "position": {
           "x": 381,
@@ -146,23 +146,23 @@
       },
       {
         "nodeId": "graph0_node2",
-        "annotation": "The public, distributed 'waiting area' where transactions are stored in a pending state until they are included in the next block. Upon inclusion, they are removed from the mempool. The mempool is maintained in a distributed manner by blockchain nodes."
+        "annotation": "The public, distributed 'waiting area' where transactions are stored in a pending state until they are included in the next block."
       },
       {
         "nodeId": "graph0_node3",
-        "annotation": "Searchers are agents who look through the public mempool for MEV opportunities. specifically, they bundle user transactions along with their own transactions in a specific order that makes them a profit. Searchers typically send these bundles to 'Builders' who aggregate such bundles and submit them for inclusion to 'Relays' for a fee."
+        "annotation": "Searchers are agents who look through the public mempool for MEV opportunities. "
       },
       {
         "nodeId": "graph0_node5",
-        "annotation": "Since Ethereum 2.0 the role of block building was seperated from block proposers and given to a new agent, the block builder. Block builders receive 'bundles' from searchers as well as private transactions directly submitted to them to construct candidate blocks for block proposers."
+        "annotation": "Block builders receive 'bundles' from searchers as well as private transactions directly submitted to them to construct candidate blocks for block proposers."
       },
       {
         "nodeId": "graph0_node6",
-        "annotation": "Relays are decentralized networks that enable block proposers to receive and price blocks from builders in a permissionless manner to create an efficient market for blockspace, and capture MEV for all participants. (They can also enable the communication between searchers and builders, but that is out of scope here)."
+        "annotation": "Relays are decentralized networks that enable block proposers to receive and price blocks from builders in a permissionless manner."
       },
       {
         "nodeId": "graph0_node4",
-        "annotation": "The block proposer is a validator who has been psuedorandomly selected to propose the next block. This validator therefore has a monopoly on the next block and has complete control on the ordering and inclusion of all valid transactions. The validator cannot add invalid transactions thanks to an attestation mechanism that is outside the scope of this exploration."
+        "annotation": "The block proposer is a validator who has been psuedorandomly selected to propose the next block."
       }
     ]
   }
