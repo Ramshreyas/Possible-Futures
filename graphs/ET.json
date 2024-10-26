@@ -92,7 +92,7 @@
           "id": "graph0_node8",
           "label": "Slot end",
           "nodeShape": "ellipse",
-          "annotation": "New node annotation"
+          "annotation": ""
         },
         "position": {
           "x": 659,
@@ -182,7 +182,7 @@
       },
       {
         "nodeId": "graph0_node8",
-        "annotation": "New node annotation"
+        "annotation": ""
       }
     ]
   }
