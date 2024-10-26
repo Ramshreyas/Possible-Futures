@@ -1,0 +1,189 @@
+[
+  {
+    "id": "graph0",
+    "name": "Execution Tickets",
+    "nodes": [
+      {
+        "data": {
+          "id": "graph0_node1",
+          "label": "Slot start",
+          "nodeShape": "ellipse",
+          "annotation": "The slot will contain two rounds, the beacon round and the execution round"
+        },
+        "position": {
+          "x": 100,
+          "y": 250
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node2",
+          "label": "Beacon Lottery",
+          "nodeShape": "ellipse",
+          "annotation": "The beacon proposer for the next block is already chosen for this block"
+        },
+        "position": {
+          "x": 101,
+          "y": 367
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node3",
+          "label": "Block Proposed",
+          "nodeShape": "ellipse",
+          "annotation": "The proposer proposes the block with only the inclusion list - therefore home stakers can participate without a handicap."
+        },
+        "position": {
+          "x": 228,
+          "y": 367
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node4",
+          "label": "Block Attested",
+          "nodeShape": "ellipse",
+          "annotation": "The Attester comittee attests the validity of the inclusion list."
+        },
+        "position": {
+          "x": 354,
+          "y": 367
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node5",
+          "label": "Execution Lottery",
+          "nodeShape": "ellipse",
+          "annotation": "The rights to execute the current block with the inclusion list already belong to a proposer. "
+        },
+        "position": {
+          "x": 355,
+          "y": 480
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node6",
+          "label": "Exec Block Proposed",
+          "nodeShape": "ellipse",
+          "annotation": "The block is executed with the inclusion list and any other MEV related transactions and proposed."
+        },
+        "position": {
+          "x": 501,
+          "y": 479
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node7",
+          "label": "Exec Block Attested",
+          "nodeShape": "ellipse",
+          "annotation": "The execution block committee attests the validity of the block."
+        },
+        "position": {
+          "x": 656,
+          "y": 478
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node8",
+          "label": "Slot end",
+          "nodeShape": "ellipse",
+          "annotation": "New node annotation"
+        },
+        "position": {
+          "x": 659,
+          "y": 594
+        }
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "graph0_edge1",
+          "source": "graph0_node1",
+          "target": "graph0_node2"
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_edge2",
+          "source": "graph0_node2",
+          "target": "graph0_node3"
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_edge3",
+          "source": "graph0_node3",
+          "target": "graph0_node4"
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_edge4",
+          "source": "graph0_node4",
+          "target": "graph0_node5"
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_edge5",
+          "source": "graph0_node5",
+          "target": "graph0_node6"
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_edge6",
+          "source": "graph0_node6",
+          "target": "graph0_node7"
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_edge7",
+          "source": "graph0_node7",
+          "target": "graph0_node8"
+        }
+      }
+    ],
+    "sequence": [
+      {
+        "nodeId": "graph0_node1",
+        "annotation": "The slot will contain two rounds, the beacon round and the execution round"
+      },
+      {
+        "nodeId": "graph0_node2",
+        "annotation": "The beacon proposer for the next block is already chosen for this block"
+      },
+      {
+        "nodeId": "graph0_node3",
+        "annotation": "The proposer proposes the block with only the inclusion list - therefore home stakers can participate without a handicap."
+      },
+      {
+        "nodeId": "graph0_node4",
+        "annotation": "The Attester comittee attests the validity of the inclusion list."
+      },
+      {
+        "nodeId": "graph0_node5",
+        "annotation": "The rights to execute the current block with the inclusion list already belong to a proposer. "
+      },
+      {
+        "nodeId": "graph0_node6",
+        "annotation": "The block is executed with the inclusion list and any other MEV related transactions and proposed."
+      },
+      {
+        "nodeId": "graph0_node7",
+        "annotation": "The execution block committee attests the validity of the block."
+      },
+      {
+        "nodeId": "graph0_node8",
+        "annotation": "New node annotation"
+      }
+    ]
+  }
+]
