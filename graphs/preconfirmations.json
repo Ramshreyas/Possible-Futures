@@ -1,0 +1,104 @@
+[
+  {
+    "id": "graph0",
+    "name": "Simplistic preconfirmation flow",
+    "nodes": [
+      {
+        "data": {
+          "id": "graph0_node1",
+          "label": "User",
+          "nodeShape": "diamond",
+          "annotation": "User submits a transaction and bid for preconfirmation in block n with specific post-state guarantees"
+        },
+        "position": {
+          "x": 136,
+          "y": 374
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node2",
+          "label": "Proposer for block n",
+          "nodeShape": "ellipse",
+          "annotation": "The proposer sells the preconfirmation to the user and includes their transaction in block n"
+        },
+        "position": {
+          "x": 436,
+          "y": 379
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node4",
+          "label": "Block n",
+          "nodeShape": "rectangle",
+          "annotation": "The transaction should be included with any post-state guarantees met"
+        },
+        "position": {
+          "x": 437,
+          "y": 499
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_node5",
+          "label": "Block n+1",
+          "nodeShape": "rectangle",
+          "annotation": "If the preconfirmation terms were not honoured, the stake of the Proposer for block n is slashed"
+        },
+        "position": {
+          "x": 719,
+          "y": 501
+        }
+      }
+    ],
+    "edges": [
+      {
+        "data": {
+          "id": "graph0_edge1",
+          "source": "graph0_node1",
+          "target": "graph0_node2"
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_edge6",
+          "source": "graph0_node2",
+          "target": "graph0_node1"
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_edge5",
+          "source": "graph0_node4",
+          "target": "graph0_node5"
+        }
+      },
+      {
+        "data": {
+          "id": "graph0_edge3",
+          "source": "graph0_node2",
+          "target": "graph0_node4"
+        }
+      }
+    ],
+    "sequence": [
+      {
+        "nodeId": "graph0_node1",
+        "annotation": "User submits a transaction and bid for preconfirmation in block n with specific post-state guarantees"
+      },
+      {
+        "nodeId": "graph0_node2",
+        "annotation": "The proposer sells the preconfirmation to the user and includes their transaction in block n"
+      },
+      {
+        "nodeId": "graph0_node4",
+        "annotation": "The transaction should be included with any post-state guarantees met"
+      },
+      {
+        "nodeId": "graph0_node5",
+        "annotation": "If the preconfirmation terms were not honoured, the stake of the Proposer for block n is slashed"
+      }
+    ]
+  }
+]
