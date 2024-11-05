@@ -26,10 +26,10 @@
         <div id="node-properties">
           <h2>Properties</h2>
           <label for="node-label">Label:</label>
-          <input type="text" id="node-label" value="">
+          <input type="text" id="node-label" value="" data-tooltip="Enter the label for the selected node">
 
           <label for="node-shape">Shape:</label>
-          <select id="node-shape">
+          <select id="node-shape" data-tooltip="Select the shape for the selected node">
             <option value="ellipse">Ellipse</option>
             <option value="rectangle">Rectangle</option>
             <option value="roundrectangle">Round Rectangle</option>
@@ -45,14 +45,14 @@
           </select>
 
           <label for="node-annotation">Annotation:</label>
-          <textarea id="node-annotation" rows="4"></textarea>
+          <textarea id="node-annotation" rows="4" data-tooltip="Enter annotation for the selected node"></textarea>
         </div>
 
         <!-- Sequencing Interface -->
         <div id="sequence-interface">
           <h2>Sequence</h2>
           <!-- Add to Sequence Button -->
-          <button id="add-to-sequence-btn" class="icon-btn" title="Add to Sequence" disabled>
+          <button id="add-to-sequence-btn" class="icon-btn" title="Add to Sequence" disabled data-tooltip="Add the selected node to the sequence">
             <i class="fas fa-plus"></i>
           </button>
 
@@ -75,35 +75,39 @@
         <div id="controls">
           <!-- Dropdown Add Button -->
           <div class="dropdown">
-            <button class="btn dropdown-toggle" id="add-btn" title="Add">
+            <button class="btn dropdown-toggle" id="add-btn" title="Add" data-tooltip="Add a node or edge">
               <i class="fas fa-plus"></i>
             </button>
             <div class="dropdown-menu">
-              <button class="dropdown-item" id="add-node-btn">Add Node</button>
-              <button class="dropdown-item" id="add-edge-btn">Add Edge</button>
+              <button class="dropdown-item" id="add-node-btn" data-tooltip="Add a new node">Add Node</button>
+              <button class="dropdown-item" id="add-edge-btn" data-tooltip="Add a new edge">Add Edge</button>
             </div>
           </div>
-          <button class="btn" id="delete-element-btn" title="Delete Selected">
+          <button class="btn" id="delete-element-btn" title="Delete Selected" data-tooltip="Delete the selected element">
             <i class="fas fa-trash"></i>
           </button>
-          <button class="btn" id="load-btn" title="Load Graph">
+          <button class="btn" id="load-btn" title="Load Graph" data-tooltip="Load a graph from a JSON file">
             <i class="fas fa-upload"></i>
           </button>
           <div class="dropdown">
-            <button class="btn" id="download-btn" title="Download Graph">
+            <button class="btn" id="download-btn" title="Download Graph" data-tooltip="Download the graph">
               <i class="fas fa-download"></i>
             </button>
             <div class="dropdown-menu">
-              <button class="dropdown-item" id="download-json-btn">JSON</button>
-              <button class="dropdown-item" id="download-html-btn">HTML</button>
+              <button class="dropdown-item" id="download-json-btn" data-tooltip="Download as JSON">JSON</button>
+              <button class="dropdown-item" id="download-html-btn" data-tooltip="Download as HTML">HTML</button>
             </div>
           </div>          
-          <button class="btn" id="reset-btn" title="Reset Graph">
+          <button class="btn" id="reset-btn" title="Reset Graph" data-tooltip="Reset the graph editor">
             <i class="fas fa-redo"></i>
           </button>
           <!-- Preview Button -->
-          <button class="btn" id="preview-btn" title="Preview Sequence">
+          <button class="btn" id="preview-btn" title="Preview Sequence" data-tooltip="Preview the sequence">
             <i class="fas fa-eye"></i>
+          </button>
+          <!-- Help Button -->
+          <button class="btn" id="help-btn" title="Toggle Help">
+            <i class="fas fa-question-circle"></i>
           </button>
         </div>
         <div id="branding">
@@ -115,6 +119,7 @@
 
   <!-- External JavaScript -->
   <script src="js/editor.js"></script>
+  <script src="js/tooltips.js"></script>
 
 </body>
 </html>
